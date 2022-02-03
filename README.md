@@ -2,7 +2,7 @@
 
 ## Prerequisite
 
-下記がGlobalにインストールされていること
+下記が Global にインストールされていること
 
 - Node.js@16
 - yarn
