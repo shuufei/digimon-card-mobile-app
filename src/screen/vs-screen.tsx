@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text } from 'native-base';
 
 export const VSScreen = () => (
   <View>
