@@ -70,6 +70,7 @@ export const CardList: FC = () => {
         //   index,
         // })}
         numColumns={columns}
+        contentContainerStyle={{ paddingTop: 10, paddingBottom: 50 }}
       />
     </View>
   );
