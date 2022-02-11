@@ -1,48 +1,17 @@
-import { SIGNED_QS } from '@env';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { orderBy } from 'lodash';
 import { FlatList, Image, View } from 'native-base';
 import { FC, useMemo } from 'react';
-import { Dimensions, ListRenderItemInfo } from 'react-native';
+import { Dimensions, ListRenderItemInfo, Pressable } from 'react-native';
 import { ALL_CARD_LIST } from '../configs/all-card-list';
-import { ENDPOINT } from '../configs/distribution';
 import { CardInfo } from '../domains/card';
-
-const signedQueryStrings = SIGNED_QS;
+import { RootParamList } from '../navigation';
+import { getCardImageSrc } from '../utils/get-card-image-src';
 
 type FlatListItemData = CardInfo & {
   width: number;
   height: number;
   padding: number;
-};
-
-const CardItem = ({ item }: ListRenderItemInfo<FlatListItemData>) => {
-  return (
-    <Image
-      source={{
-        uri: `${ENDPOINT}/${item.category}/${item.imgFileName}?${signedQueryStrings}`,
-      }}
-      resizeMode="contain"
-      height={item.height}
-      width={item.width}
-      alt={`${item.name}`}
-      m={item.padding}
-    />
-    /**
-     * NOTE:
-     * Bare workflowじゃないと利用できない
-     * https://github.com/DylanVann/react-native-fast-image/issues/692
-     * https://github.com/DylanVann/react-native-fast-image/issues/704
-     * https://docs.expo.dev/introduction/managed-vs-bare/?redirected
-     */
-    // <FastImage
-    //   style={{ width: item.width, height: item.height, margin: item.padding }}
-    //   source={{
-    //     uri: `${ENDPOINT}/BT01/${item.no}.png?${signedQueryStrings}`,
-    //     priority: FastImage.priority.normal,
-    //   }}
-    //   resizeMode={FastImage.resizeMode.contain}
-    // />
-  );
 };
 
 export const CardList: FC = () => {
@@ -59,6 +28,8 @@ export const CardList: FC = () => {
       cardHeight,
     };
   }, [windowWidth]);
+  const { navigate } = useNavigation<NavigationProp<RootParamList>>();
+
   return (
     <View>
       <FlatList
@@ -69,7 +40,44 @@ export const CardList: FC = () => {
           height: cardHeight,
           padding: gap,
         }))}
-        renderItem={CardItem}
+        renderItem={({ item }: ListRenderItemInfo<FlatListItemData>) => {
+          return (
+            <Pressable
+              onPress={() => {
+                navigate('CardModal', {
+                  name: item.name,
+                  cardImageSrc: getCardImageSrc(item),
+                });
+              }}
+            >
+              <Image
+                source={{
+                  uri: getCardImageSrc(item),
+                }}
+                resizeMode="contain"
+                height={item.height}
+                width={item.width}
+                alt={`${item.name}`}
+                m={item.padding}
+              />
+            </Pressable>
+            /**
+             * NOTE:
+             * Bare workflowじゃないと利用できない
+             * https://github.com/DylanVann/react-native-fast-image/issues/692
+             * https://github.com/DylanVann/react-native-fast-image/issues/704
+             * https://docs.expo.dev/introduction/managed-vs-bare/?redirected
+             */
+            // <FastImage
+            //   style={{ width: item.width, height: item.height, margin: item.padding }}
+            //   source={{
+            //     uri: `${ENDPOINT}/BT01/${item.no}.png?${signedQueryStrings}`,
+            //     priority: FastImage.priority.normal,
+            //   }}
+            //   resizeMode={FastImage.resizeMode.contain}
+            // />
+          );
+        }}
         removeClippedSubviews={true}
         /**
          * FIXME: スクロール時の描画が安定したいないためgetItemLayoutを無効にする
