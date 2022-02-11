@@ -1,12 +1,10 @@
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { orderBy } from 'lodash';
-import { FlatList, Image, View } from 'native-base';
+import { omit, orderBy } from 'lodash';
+import { FlatList, View } from 'native-base';
 import { FC, useMemo } from 'react';
-import { Dimensions, ListRenderItemInfo, Pressable } from 'react-native';
+import { Dimensions, ListRenderItemInfo } from 'react-native';
 import { ALL_CARD_LIST } from '../configs/all-card-list';
 import { CardInfo } from '../domains/card';
-import { RootParamList } from '../navigation';
-import { getCardImageSrc } from '../utils/get-card-image-src';
+import { Card } from './card';
 
 type FlatListItemData = CardInfo & {
   width: number;
@@ -28,7 +26,6 @@ export const CardList: FC = () => {
       cardHeight,
     };
   }, [windowWidth]);
-  const { navigate } = useNavigation<NavigationProp<RootParamList>>();
 
   return (
     <View>
@@ -42,25 +39,12 @@ export const CardList: FC = () => {
         }))}
         renderItem={({ item }: ListRenderItemInfo<FlatListItemData>) => {
           return (
-            <Pressable
-              onPress={() => {
-                navigate('CardModal', {
-                  name: item.name,
-                  cardImageSrc: getCardImageSrc(item),
-                });
-              }}
-            >
-              <Image
-                source={{
-                  uri: getCardImageSrc(item),
-                }}
-                resizeMode="contain"
-                height={item.height}
-                width={item.width}
-                alt={`${item.name}`}
-                m={item.padding}
-              />
-            </Pressable>
+            <Card
+              card={omit(item, ['width', 'height', 'padding'])}
+              width={item.width}
+              height={item.height}
+              padding={item.padding}
+            />
             /**
              * NOTE:
              * Bare workflowじゃないと利用できない
