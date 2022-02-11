@@ -1,50 +1,83 @@
-import { FlatList, Text, View } from 'native-base';
-import { ListRenderItemInfo } from 'react-native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { Button, View } from 'native-base';
+import { useEffect, useState } from 'react';
+import { CardList } from '../components/card-list';
+import { DeckList } from '../components/deck-list';
+import { RootParamList } from '../navigation';
+import { Ionicons } from '@expo/vector-icons';
+import SegmentControl from '@react-native-segmented-control/segmented-control';
+import { FC } from 'react';
 
-const ITEM_HEIGHT = 10;
+const DeckScreenTab = {
+  deck: 0,
+  cardList: 1,
+} as const;
 
-const CardItem = ({ item }: ListRenderItemInfo<{ key: string }>) => {
-  return (
-    <Text color="black" height={ITEM_HEIGHT} flex={1}>
-      {item.key}
-    </Text>
+const HeaderLeft: FC<{ show: boolean; onPress: () => void }> = ({
+  show,
+  onPress,
+}) => {
+  return show ? (
+    <View paddingLeft={2}>
+      <Button
+        size="xs"
+        variant="ghost"
+        _pressed={{
+          background: '#ffffff00',
+        }}
+        onPress={onPress}
+      >
+        <Ionicons name="ios-filter" size={24} />
+      </Button>
+    </View>
+  ) : (
+    <></>
   );
 };
 
-const DUMMY_DATA = [
-  { key: 'Devin' },
-  { key: 'Dan' },
-  { key: 'Dominic' },
-  { key: 'Jackson' },
-  { key: 'James' },
-  { key: 'Joel' },
-  { key: 'John' },
-  { key: 'Jillian' },
-  { key: 'Jimmy' },
-  { key: 'Julie' },
-]
-  .map((v) => new Array(100).fill(v).map((v, i) => ({ key: `${v.key}:${i}` })))
-  .flat();
-
 export const DeckScreen = () => {
-  const columns = 3;
+  const { navigate, setOptions } =
+    useNavigation<NavigationProp<RootParamList>>();
+  const [currentTab, setTab] = useState<number>(DeckScreenTab.deck);
+
+  useEffect(() => {
+    setOptions({
+      title: 'デッキ構築',
+      headerLeft: () => {
+        return (
+          <HeaderLeft
+            show={currentTab == DeckScreenTab.cardList}
+            onPress={() => {
+              navigate('DeckFilterModal');
+            }}
+          />
+        );
+      },
+      headerTitle: () => {
+        const tabTitles = ['デッキ', 'カードリスト'];
+        return (
+          <SegmentControl
+            values={tabTitles}
+            selectedIndex={DeckScreenTab.deck}
+            style={{
+              width: 200,
+            }}
+            onValueChange={(value) => {
+              setTab(tabTitles.findIndex((title) => title === value) ?? 0);
+            }}
+          />
+        );
+      },
+    });
+  }, [setOptions]);
   return (
     <View>
-      <FlatList
-        data={DUMMY_DATA}
-        renderItem={CardItem}
-        removeClippedSubviews={true}
-        /**
-         * FIXME: スクロール時の描画が安定したいないためgetItemLayoutを無効にする
-         */
-        // getItemLayout={(_, index) => ({
-        //   length: ITEM_HEIGHT,
-        //   offset: ITEM_HEIGHT * (index / columns),
-        //   index,
-        // })}
-        numColumns={columns}
-      />
-      <Text>Deck Construction</Text>
+      <View display={currentTab === DeckScreenTab.deck ? 'flex' : 'none'}>
+        <DeckList />
+      </View>
+      <View display={currentTab === DeckScreenTab.cardList ? 'flex' : 'none'}>
+        <CardList />
+      </View>
     </View>
   );
 };
