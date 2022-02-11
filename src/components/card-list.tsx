@@ -2,7 +2,7 @@ import { SIGNED_QS } from '@env';
 import { FlatList, Image, View } from 'native-base';
 import { FC, useMemo } from 'react';
 import { Dimensions, ListRenderItemInfo } from 'react-native';
-import BT01 from '../../assets/cardInfo/BT01.json';
+import { ALL_CARD_LIST } from '../configs/all-card-list';
 import { CardInfo } from '../domains/card';
 
 const signedQueryStrings = SIGNED_QS;
@@ -14,6 +14,7 @@ type FlatListItemData = CardInfo & {
 };
 
 const CardItem = ({ item }: ListRenderItemInfo<FlatListItemData>) => {
+  console.log('-- render card: ', item.no);
   /**
    * TODO:
    * apply cache
@@ -21,7 +22,9 @@ const CardItem = ({ item }: ListRenderItemInfo<FlatListItemData>) => {
    */
   return (
     <Image
-      source={{ uri: `${ENDPOINT}/BT01/${item.no}.png?${signedQueryStrings}` }}
+      source={{
+        uri: `${ENDPOINT}/${item.category}/${item.imgFileName}?${signedQueryStrings}`,
+      }}
       resizeMode="contain"
       height={item.height}
       width={item.width}
@@ -46,8 +49,9 @@ const CardItem = ({ item }: ListRenderItemInfo<FlatListItemData>) => {
   );
 };
 
-const DIGIMON_DUMMY_DATA: CardInfo[] = BT01.cardInfoList;
-
+/**
+ * TODO: configファイルに定義
+ */
 const ENDPOINT = 'https://d2399fwvfjwbi3.cloudfront.net/images';
 
 export const CardList: FC = () => {
@@ -68,7 +72,7 @@ export const CardList: FC = () => {
     <View>
       <FlatList
         keyExtractor={(item) => `${item.no}-${item.parallel || 'regular'}`}
-        data={DIGIMON_DUMMY_DATA.map((d) => ({
+        data={ALL_CARD_LIST.map((d) => ({
           ...d,
           width: cardWidth,
           height: cardHeight,
@@ -79,11 +83,11 @@ export const CardList: FC = () => {
         /**
          * FIXME: スクロール時の描画が安定したいないためgetItemLayoutを無効にする
          */
-        getItemLayout={(_, index) => ({
-          length: cardHeight,
-          offset: cardHeight * (index / columns),
-          index,
-        })}
+        // getItemLayout={(_, index) => ({
+        //   length: cardHeight,
+        //   offset: cardHeight * (index / columns),
+        //   index,
+        // })}
         numColumns={columns}
         contentContainerStyle={{ paddingTop: 10, paddingBottom: 50 }}
       />

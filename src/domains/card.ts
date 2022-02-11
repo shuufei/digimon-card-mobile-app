@@ -50,4 +50,5 @@ export type CardInfo = {
   evolutionaryOriginEffect?: string;
   securityEffect?: string;
   imgFileName: string;
+  category: string;
 };
