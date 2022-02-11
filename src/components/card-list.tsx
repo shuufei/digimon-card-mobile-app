@@ -3,6 +3,7 @@ import { FlatList, Image, View } from 'native-base';
 import { FC, useMemo } from 'react';
 import { Dimensions, ListRenderItemInfo } from 'react-native';
 import { ALL_CARD_LIST } from '../configs/all-card-list';
+import { ENDPOINT } from '../configs/distribution';
 import { CardInfo } from '../domains/card';
 
 const signedQueryStrings = SIGNED_QS;
@@ -14,12 +15,6 @@ type FlatListItemData = CardInfo & {
 };
 
 const CardItem = ({ item }: ListRenderItemInfo<FlatListItemData>) => {
-  console.log('-- render card: ', item.no);
-  /**
-   * TODO:
-   * apply cache
-   * https://reactnative.dev/docs/optimizing-flatlist-configuration#use-cached-optimized-images
-   */
   return (
     <Image
       source={{
@@ -48,11 +43,6 @@ const CardItem = ({ item }: ListRenderItemInfo<FlatListItemData>) => {
     // />
   );
 };
-
-/**
- * TODO: configファイルに定義
- */
-const ENDPOINT = 'https://d2399fwvfjwbi3.cloudfront.net/images';
 
 export const CardList: FC = () => {
   const columns = 4;
