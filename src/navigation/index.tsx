@@ -42,7 +42,7 @@ export const DrawerNavigator: FC = () => {
                   size="xs"
                   variant="ghost"
                   _pressed={{
-                    background: '#fff',
+                    background: '#ffffff00',
                   }}
                   onPress={() => {
                     navigate('DeckFilterModal');

@@ -1,7 +1,47 @@
-import { Text, View } from 'native-base';
+import { FlatList, Text, View } from 'native-base';
+import { ListRenderItemInfo } from 'react-native';
 
-export const DeckScreen = () => (
-  <View>
-    <Text>Deck Construction</Text>
-  </View>
-);
+const ITEM_HEIGHT = 10;
+
+const CardItem = ({ item }: ListRenderItemInfo<{ key: string }>) => {
+  return (
+    <Text color="black" height={ITEM_HEIGHT} flex={1}>
+      {item.key}
+    </Text>
+  );
+};
+
+const DUMMY_DATA = [
+  { key: 'Devin' },
+  { key: 'Dan' },
+  { key: 'Dominic' },
+  { key: 'Jackson' },
+  { key: 'James' },
+  { key: 'Joel' },
+  { key: 'John' },
+  { key: 'Jillian' },
+  { key: 'Jimmy' },
+  { key: 'Julie' },
+]
+  .map((v) => new Array(100).fill(v).map((v, i) => ({ key: `${v.key}:${i}` })))
+  .flat();
+
+export const DeckScreen = () => {
+  const columns = 3;
+  return (
+    <View>
+      <FlatList
+        data={DUMMY_DATA}
+        renderItem={CardItem}
+        removeClippedSubviews={true}
+        getItemLayout={(_, index) => ({
+          length: ITEM_HEIGHT,
+          offset: ITEM_HEIGHT * (index / columns),
+          index,
+        })}
+        numColumns={columns}
+      />
+      <Text>Deck Construction</Text>
+    </View>
+  );
+};
