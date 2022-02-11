@@ -8,7 +8,7 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button, View } from 'native-base';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { DeckFilterModalScreen } from '../screen/deck-filter-modal-screen';
 import { DeckScreen } from '../screen/deck-screen';
 import { VSScreen } from '../screen/vs-screen';
@@ -20,8 +20,14 @@ type RootParamList = {
 
 const Drawer = createDrawerNavigator();
 
+const DeckScreenTab = {
+  deck: 0,
+  cardList: 1,
+} as const;
+
 export const DrawerNavigator: FC = () => {
   const { navigate } = useNavigation<NavigationProp<RootParamList>>();
+  const [currentTab, setTab] = useState<number>(DeckScreenTab.deck);
   return (
     <Drawer.Navigator initialRouteName="Deck">
       <Drawer.Screen
@@ -30,7 +36,7 @@ export const DrawerNavigator: FC = () => {
         options={{
           title: 'デッキ構築',
           headerLeft: () => {
-            return (
+            return currentTab == DeckScreenTab.cardList ? (
               <View paddingLeft={2}>
                 <Button
                   size="xs"
@@ -45,15 +51,19 @@ export const DrawerNavigator: FC = () => {
                   <Ionicons name="ios-filter" size={24} />
                 </Button>
               </View>
-            );
+            ) : undefined;
           },
           headerTitle: () => {
+            const tabTitles = ['デッキ', 'カードリスト'];
             return (
               <SegmentControl
-                values={['デッキ', 'カード一覧']}
-                selectedIndex={0}
+                values={tabTitles}
+                selectedIndex={DeckScreenTab.deck}
                 style={{
                   width: 200,
+                }}
+                onValueChange={(value) => {
+                  setTab(tabTitles.findIndex((title) => title === value) ?? 0);
                 }}
               />
             );
