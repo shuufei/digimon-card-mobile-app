@@ -34,11 +34,14 @@ export const DeckScreen = () => {
         data={DUMMY_DATA}
         renderItem={CardItem}
         removeClippedSubviews={true}
-        getItemLayout={(_, index) => ({
-          length: ITEM_HEIGHT,
-          offset: ITEM_HEIGHT * (index / columns),
-          index,
-        })}
+        /**
+         * FIXME: スクロール時の描画が安定したいないためgetItemLayoutを無効にする
+         */
+        // getItemLayout={(_, index) => ({
+        //   length: ITEM_HEIGHT,
+        //   offset: ITEM_HEIGHT * (index / columns),
+        //   index,
+        // })}
         numColumns={columns}
       />
       <Text>Deck Construction</Text>
