@@ -9,7 +9,7 @@ export default function App() {
     <NativeBaseProvider>
       <SafeAreaProvider>
         <Navigation />
-        <StatusBar style="auto" />
+        <StatusBar style="dark" />
       </SafeAreaProvider>
     </NativeBaseProvider>
   );

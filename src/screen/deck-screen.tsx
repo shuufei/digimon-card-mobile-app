@@ -1,4 +1,4 @@
-import { View, Text } from 'native-base';
+import { Text, View } from 'native-base';
 
 export const DeckScreen = () => (
   <View>
