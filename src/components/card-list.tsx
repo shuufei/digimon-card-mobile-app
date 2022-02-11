@@ -28,6 +28,21 @@ const CardItem = ({ item }: ListRenderItemInfo<FlatListItemData>) => {
       alt={`${item.name}`}
       m={item.padding}
     />
+    /**
+     * NOTE:
+     * Bare workflowじゃないと利用できない
+     * https://github.com/DylanVann/react-native-fast-image/issues/692
+     * https://github.com/DylanVann/react-native-fast-image/issues/704
+     * https://docs.expo.dev/introduction/managed-vs-bare/?redirected
+     */
+    // <FastImage
+    //   style={{ width: item.width, height: item.height, margin: item.padding }}
+    //   source={{
+    //     uri: `${ENDPOINT}/BT01/${item.no}.png?${signedQueryStrings}`,
+    //     priority: FastImage.priority.normal,
+    //   }}
+    //   resizeMode={FastImage.resizeMode.contain}
+    // />
   );
 };
 
@@ -64,11 +79,11 @@ export const CardList: FC = () => {
         /**
          * FIXME: スクロール時の描画が安定したいないためgetItemLayoutを無効にする
          */
-        // getItemLayout={(_, index) => ({
-        //   length: ITEM_HEIGHT,
-        //   offset: ITEM_HEIGHT * (index / columns),
-        //   index,
-        // })}
+        getItemLayout={(_, index) => ({
+          length: cardHeight,
+          offset: cardHeight * (index / columns),
+          index,
+        })}
         numColumns={columns}
         contentContainerStyle={{ paddingTop: 10, paddingBottom: 50 }}
       />
