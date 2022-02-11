@@ -1,4 +1,5 @@
 import { SIGNED_QS } from '@env';
+import { orderBy } from 'lodash';
 import { FlatList, Image, View } from 'native-base';
 import { FC, useMemo } from 'react';
 import { Dimensions, ListRenderItemInfo } from 'react-native';
@@ -62,7 +63,7 @@ export const CardList: FC = () => {
     <View>
       <FlatList
         keyExtractor={(item) => `${item.no}-${item.parallel || 'regular'}`}
-        data={ALL_CARD_LIST.map((d) => ({
+        data={orderBy(ALL_CARD_LIST, ['cardtype', 'lv', 'color']).map((d) => ({
           ...d,
           width: cardWidth,
           height: cardHeight,

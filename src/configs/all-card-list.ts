@@ -18,7 +18,51 @@ import ST06 from '../../assets/cardInfo/ST06.json';
 import ST07 from '../../assets/cardInfo/ST07.json';
 import ST08 from '../../assets/cardInfo/ST08.json';
 import ST09 from '../../assets/cardInfo/ST09.json';
-import { CardInfo } from '../domains/card';
+import { CardInfo, COLOR, Color, CardType } from '../domains/card';
+
+export const convertFromApiColorToColor = (color: string): Color => {
+  switch (color) {
+    case 'red':
+      return COLOR['1_red'];
+    case 'blue':
+      return COLOR['2_blue'];
+    case 'yellow':
+      return COLOR['3_yellow'];
+    case 'green':
+      return COLOR['4_green'];
+    case 'black':
+      return COLOR['5_black'];
+    case 'purple':
+      return COLOR['6_purple'];
+    case 'white':
+      return COLOR['7_white'];
+    default:
+      return COLOR['8_multicolor'];
+  }
+};
+
+export const convertFromApiColorsToColors = (color: string) => {
+  const isMulticolor = color.includes('multicolor');
+  const colors = isMulticolor ? color.split(' ')[0].split('_') : [color];
+  return colors.map(convertFromApiColorToColor);
+};
+
+export const convertFromApiCarttypeToCardtype = (
+  cardtype: string
+): CardType => {
+  switch (cardtype) {
+    case 'デジタマ':
+      return '1_デジタマ';
+    case 'デジモン':
+      return '2_デジモン';
+    case 'テイマー':
+      return '3_テイマー';
+    case 'オプション':
+      return '4_オプション';
+    default:
+      return '2_デジモン';
+  }
+};
 
 export const ALL_CARD_LIST: CardInfo[] = [
   ...BT01.cardInfoList.map((v) => ({ ...v, category: 'BT01' })),
@@ -41,4 +85,9 @@ export const ALL_CARD_LIST: CardInfo[] = [
   ...ST07.cardInfoList.map((v) => ({ ...v, category: 'ST07' })),
   ...ST08.cardInfoList.map((v) => ({ ...v, category: 'ST08' })),
   ...ST09.cardInfoList.map((v) => ({ ...v, category: 'ST09' })),
-];
+].map((v) => ({
+  ...v,
+  color: convertFromApiColorToColor(v.color),
+  colors: convertFromApiColorsToColors(v.color),
+  cardtype: convertFromApiCarttypeToCardtype(v.cardtype),
+}));

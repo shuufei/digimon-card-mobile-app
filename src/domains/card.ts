@@ -11,10 +11,10 @@ export const LV = {
 export type Lv = keyof typeof LV;
 
 export const CARD_TYPE = {
-  デジモン: 'デジモン',
-  デジタマ: 'デジタマ',
-  テイマー: 'テイマー',
-  オプション: 'オプション',
+  '1_デジタマ': '1_デジタマ',
+  '2_デジモン': '2_デジモン',
+  '3_テイマー': '3_テイマー',
+  '4_オプション': '4_オプション',
 } as const;
 
 export type CardType = keyof typeof CARD_TYPE;
@@ -28,16 +28,28 @@ export type ApiResponseColor =
   | 'purple'
   | 'white';
 
+export const COLOR = {
+  '1_red': '1_red',
+  '2_blue': '2_blue',
+  '3_yellow': '3_yellow',
+  '4_green': '4_green',
+  '5_black': '5_black',
+  '6_purple': '6_purple',
+  '7_white': '7_white',
+  '8_multicolor': '8_multicolor',
+} as const;
+
+export type Color = keyof typeof COLOR;
+
 export type CardInfo = {
   no: string;
   lv?: string;
   // lv?: Lv;
   rarity: string;
-  cardtype: string;
-  // cardtype: CardType;
+  cardtype: CardType;
   parallel?: string;
   name: string;
-  // color: ApiResponseColor;
+  colors: Color[];
   color: string;
   form?: string;
   attribute: string;
