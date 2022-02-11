@@ -69,7 +69,7 @@ export const DeckScreen = () => {
         );
       },
     });
-  }, [setOptions]);
+  }, [setOptions, currentTab]);
   return (
     <View>
       <View display={currentTab === DeckScreenTab.deck ? 'flex' : 'none'}>
