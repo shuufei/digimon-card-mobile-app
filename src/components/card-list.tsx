@@ -3,7 +3,7 @@ import { FlatList, Image, View } from 'native-base';
 import { FC, useMemo } from 'react';
 import { Dimensions, ListRenderItemInfo } from 'react-native';
 import BT01 from '../../assets/cardInfo/BT01.json';
-import { CardInfo } from '../types';
+import { CardInfo } from '../domains/card';
 
 const signedQueryStrings = SIGNED_QS;
 
