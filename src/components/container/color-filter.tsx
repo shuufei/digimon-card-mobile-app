@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { last, remove } from 'lodash';
-import { Divider, Pressable, Text, View } from 'native-base';
+import { last } from 'lodash';
+import { Text, View } from 'native-base';
 import { useCallback, useState } from 'react';
 import {
   COLOR,
@@ -8,6 +8,7 @@ import {
   convertToColorCodeFromColor,
   convertToDisplayColorFromColor,
 } from '../../domains/card';
+import { FilterItem } from '../presentation/filter-item';
 
 const colorList: Color[] = Object.entries(COLOR)
   .map((v) => v[0] as Color)
@@ -42,7 +43,7 @@ export const ColorFilter = () => {
       setFilteredColors((currentColors) => {
         const includes = currentColors.includes(color);
         return includes
-          ? remove(filteredColors, (v) => v !== color)
+          ? filteredColors.filter((v) => v !== color)
           : [...filteredColors, color];
       });
     },
@@ -57,9 +58,10 @@ export const ColorFilter = () => {
       <View backgroundColor="white" borderRadius={5} marginTop={1}>
         {colorList.map((color) => {
           return (
-            <Pressable
+            <FilterItem
               key={color}
-              _pressed={{ backgroundColor: 'gray.100' }}
+              showDivider={color !== last(colorList)}
+              isPressable={true}
               onPress={() => toggleFilteredColor(color)}
             >
               <View
@@ -98,10 +100,7 @@ export const ColorFilter = () => {
                   }}
                 />
               </View>
-              {color === last(colorList) ? undefined : (
-                <Divider marginLeft={4} />
-              )}
-            </Pressable>
+            </FilterItem>
           );
         })}
       </View>
