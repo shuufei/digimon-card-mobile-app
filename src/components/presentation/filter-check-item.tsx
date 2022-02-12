@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { View } from 'native-base';
 import { FilterItem } from './filter-item';
 import { Ionicons } from '@expo/vector-icons';
+import { primaryColorCode } from '../../configs/styles';
 
 export const FilterCheckItem: FC<{
   checked?: boolean;
@@ -33,7 +34,7 @@ export const FilterCheckItem: FC<{
         <Ionicons
           name="checkmark-sharp"
           size={24}
-          color="#2F80ED"
+          color={primaryColorCode}
           style={{
             opacity: checked ? 1 : 0,
           }}
