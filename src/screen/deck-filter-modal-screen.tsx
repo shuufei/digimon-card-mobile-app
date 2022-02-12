@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { ColorFilter } from '../components/container/color-filter';
 import { CardTypeFilter } from '../components/container/card-type-filter';
 import { DigimonLevelFilter } from '../components/container/digimon-level-filter';
+import { CategoryFilter } from '../components/container/category-filter';
 
 export const DeckFilterModalScreen: FC = () => {
   return (
@@ -11,6 +12,7 @@ export const DeckFilterModalScreen: FC = () => {
         <ColorFilter />
         <CardTypeFilter />
         <DigimonLevelFilter />
+        <CategoryFilter />
       </VStack>
     </ScrollView>
   );

@@ -132,3 +132,80 @@ export const convertToDisplayDigimonLvFromDigimonLv = (lv: Lv): string => {
       return lv;
   }
 };
+
+export const CATEGORY = {
+  BT01: 'BT01',
+  BT02: 'BT02',
+  BT03: 'BT03',
+  BT04: 'BT04',
+  BT05: 'BT05',
+  BT06: 'BT06',
+  BT07: 'BT07',
+  BT08: 'BT08',
+  EX01: 'EX01',
+  EX02: 'EX02',
+  ST01: 'ST01',
+  ST02: 'ST02',
+  ST03: 'ST03',
+  ST04: 'ST04',
+  ST05: 'ST05',
+  ST06: 'ST06',
+  ST07: 'ST07',
+  ST08: 'ST08',
+  ST09: 'ST09',
+  ST10: 'ST10',
+  PRO: 'PRO',
+} as const;
+
+export type Category = keyof typeof CATEGORY;
+
+export const convertToDisplayCategoryFromCategory = (
+  category: Category
+): string => {
+  switch (category) {
+    case 'BT01':
+      return 'BT-01 NEW EVOLUTION';
+    case 'BT02':
+      return 'BT-02 ULTIMATE POWER';
+    case 'BT03':
+      return 'BT-03 ユニオンインパクト';
+    case 'BT04':
+      return 'BT-04 グレイトレジェンド';
+    case 'BT05':
+      return 'BT-05 バトルオブオメガ';
+    case 'BT06':
+      return 'BT-06 ダブルダイヤモンド';
+    case 'BT07':
+      return 'BT-07 ネクストアドベンチャー';
+    case 'BT08':
+      return 'BT-08 ニューヒーロー';
+    case 'EX01':
+      return 'EX-01 クラシックコレクション';
+    case 'EX02':
+      return 'EX-02 デジタルハザード';
+    case 'ST01':
+      return 'ST-01 ガイアレッド';
+    case 'ST02':
+      return 'ST-02 コキュートブルー';
+    case 'ST03':
+      return 'ST-03 ヘブンズイエロー';
+    case 'ST04':
+      return 'ST-04 ギガグリーン';
+    case 'ST05':
+      return 'ST-05 ムゲンブラック';
+    case 'ST06':
+      return 'ST-06 ヴェノムヴァイオレット';
+    case 'ST07':
+      return 'ST-07 デュークモン';
+    case 'ST08':
+      return 'ST-08 アルフォースドラモン';
+    case 'ST09':
+      return 'ST-09 究極の古代竜';
+    case 'ST10':
+      return 'ST-10 異世界の軍師';
+    case 'PRO':
+      return 'PRO プロモーション';
+    default:
+      return category;
+  }
+};
