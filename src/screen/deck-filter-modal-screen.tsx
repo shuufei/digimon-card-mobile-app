@@ -4,6 +4,7 @@ import { ColorFilter } from '../components/container/color-filter';
 import { CardTypeFilter } from '../components/container/card-type-filter';
 import { DigimonLevelFilter } from '../components/container/digimon-level-filter';
 import { CategoryFilter } from '../components/container/category-filter';
+import { ParallelFilter } from '../components/container/parallel-filter';
 
 export const DeckFilterModalScreen: FC = () => {
   return (
@@ -13,6 +14,7 @@ export const DeckFilterModalScreen: FC = () => {
         <CardTypeFilter />
         <DigimonLevelFilter />
         <CategoryFilter />
+        <ParallelFilter />
       </VStack>
     </ScrollView>
   );
