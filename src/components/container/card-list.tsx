@@ -2,9 +2,9 @@ import { omit, orderBy } from 'lodash';
 import { FlatList, View } from 'native-base';
 import { FC, useMemo } from 'react';
 import { Dimensions, ListRenderItemInfo } from 'react-native';
-import { ALL_CARD_LIST } from '../configs/all-card-list';
-import { CardInfo } from '../domains/card';
-import { Card } from './card';
+import { ALL_CARD_LIST } from '../../configs/all-card-list';
+import { CardInfo } from '../../domains/card';
+import { Card } from '../presentation/card';
 
 type FlatListItemData = CardInfo & {
   width: number;

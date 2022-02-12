@@ -1,8 +1,8 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { Button, View } from 'native-base';
 import { useEffect, useState } from 'react';
-import { CardList } from '../components/card-list';
-import { DeckList } from '../components/deck-list';
+import { CardList } from '../components/container/card-list';
+import { DeckList } from '../components/container/deck-list';
 import { RootParamList } from '../navigation';
 import { Ionicons } from '@expo/vector-icons';
 import SegmentControl from '@react-native-segmented-control/segmented-control';

@@ -1,9 +1,9 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { Pressable, Image } from 'native-base';
 import { FC } from 'react';
-import { CardInfo } from '../domains/card';
-import { RootParamList } from '../navigation';
-import { getCardImageSrc } from '../utils/get-card-image-src';
+import { CardInfo } from '../../domains/card';
+import { RootParamList } from '../../navigation';
+import { getCardImageSrc } from '../../utils/get-card-image-src';
 
 export type CardProps = {
   card: CardInfo;
