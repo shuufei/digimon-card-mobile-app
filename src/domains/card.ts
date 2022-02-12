@@ -64,3 +64,45 @@ export type CardInfo = {
   imgFileName: string;
   category: string;
 };
+
+export const convertToDisplayColorFromColor = (color: Color): string => {
+  switch (color) {
+    case '1_red':
+      return '赤';
+    case '2_blue':
+      return '青';
+    case '3_yellow':
+      return '黄';
+    case '4_green':
+      return '緑';
+    case '5_black':
+      return '黒';
+    case '6_purple':
+      return '紫';
+    case '7_white':
+      return '白';
+    default:
+      return '-';
+  }
+};
+
+export const convertToColorCodeFromColor = (color: Color): string => {
+  switch (color) {
+    case '1_red':
+      return '#e7052c';
+    case '2_blue':
+      return '#2697e1';
+    case '3_yellow':
+      return '#fde105';
+    case '4_green':
+      return '#2a9b69';
+    case '5_black':
+      return '#211715';
+    case '6_purple':
+      return '#6356a3';
+    case '7_white':
+      return '#ffffff';
+    default:
+      return '#a0a0a0';
+  }
+};

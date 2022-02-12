@@ -12,6 +12,9 @@ type FlatListItemData = CardInfo & {
   padding: number;
 };
 
+/**
+ * TODO: memoize
+ */
 export const CardList: FC = () => {
   const columns = 4;
   const gap = 1.5;

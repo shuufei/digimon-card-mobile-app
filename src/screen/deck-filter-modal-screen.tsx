@@ -1,10 +1,11 @@
-import { View, Text } from 'native-base';
+import { ScrollView } from 'native-base';
 import { FC } from 'react';
+import { ColorFilter } from '../components/container/color-filter';
 
 export const DeckFilterModalScreen: FC = () => {
   return (
-    <View>
-      <Text>Deck Filter Modal Screen</Text>
-    </View>
+    <ScrollView px={4} pt={4} pb={8}>
+      <ColorFilter />
+    </ScrollView>
   );
 };
