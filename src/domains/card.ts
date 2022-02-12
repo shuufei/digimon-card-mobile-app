@@ -106,3 +106,20 @@ export const convertToColorCodeFromColor = (color: Color): string => {
       return '#a0a0a0';
   }
 };
+
+export const convertToDisplayCardTypeFromCardType = (
+  cardType: CardType
+): string => {
+  switch (cardType) {
+    case '1_デジタマ':
+      return 'デジタマ';
+    case '2_デジモン':
+      return 'デジモン';
+    case '3_テイマー':
+      return 'テイマー';
+    case '4_オプション':
+      return 'オプション';
+    default:
+      return '-';
+  }
+};
