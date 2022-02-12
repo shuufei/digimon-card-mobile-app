@@ -123,3 +123,12 @@ export const convertToDisplayCardTypeFromCardType = (
       return '-';
   }
 };
+
+export const convertToDisplayDigimonLvFromDigimonLv = (lv: Lv): string => {
+  switch (lv) {
+    case '-':
+      return 'None';
+    default:
+      return lv;
+  }
+};
