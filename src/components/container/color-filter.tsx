@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import { last } from 'lodash';
 import { Text, View } from 'native-base';
 import { useCallback, useState } from 'react';
@@ -8,7 +7,7 @@ import {
   convertToColorCodeFromColor,
   convertToDisplayColorFromColor,
 } from '../../domains/card';
-import { FilterItem } from '../presentation/filter-item';
+import { FilterCheckItem } from '../presentation/filter-check-item';
 
 const colorList: Color[] = Object.entries(COLOR)
   .map((v) => v[0] as Color)
@@ -58,49 +57,33 @@ export const ColorFilter = () => {
       <View backgroundColor="white" borderRadius={5} marginTop={1}>
         {colorList.map((color) => {
           return (
-            <FilterItem
+            <FilterCheckItem
               key={color}
+              checked={filteredColors.includes(color)}
               showDivider={color !== last(colorList)}
               isPressable={true}
               onPress={() => toggleFilteredColor(color)}
             >
-              <View
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-                flexDirection="row"
-                px={4}
-                py={3}
-              >
-                <View display="flex" alignItems="center" flexDirection="row">
-                  <View
-                    width={14}
-                    height={14}
-                    backgroundColor={convertToColorCodeFromColor(color)}
-                    borderColor={convertToBorderColorCodeFromColor(color)}
-                    borderStyle="solid"
-                    borderWidth={1}
-                    borderRadius={14}
-                  ></View>
-                  <Text
-                    marginLeft={2}
-                    fontSize={14}
-                    color="black"
-                    fontWeight="semibold"
-                  >
-                    {convertToDisplayColorFromColor(color)}
-                  </Text>
-                </View>
-                <Ionicons
-                  name="checkmark-sharp"
-                  size={24}
-                  color="#2F80ED"
-                  style={{
-                    opacity: filteredColors.includes(color) ? 1 : 0,
-                  }}
-                />
+              <View display="flex" alignItems="center" flexDirection="row">
+                <View
+                  width={14}
+                  height={14}
+                  backgroundColor={convertToColorCodeFromColor(color)}
+                  borderColor={convertToBorderColorCodeFromColor(color)}
+                  borderStyle="solid"
+                  borderWidth={1}
+                  borderRadius={14}
+                ></View>
+                <Text
+                  marginLeft={2}
+                  fontSize={14}
+                  color="black"
+                  fontWeight="semibold"
+                >
+                  {convertToDisplayColorFromColor(color)}
+                </Text>
               </View>
-            </FilterItem>
+            </FilterCheckItem>
           );
         })}
       </View>
