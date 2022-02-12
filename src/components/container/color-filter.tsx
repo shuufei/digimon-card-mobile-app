@@ -42,11 +42,11 @@ export const ColorFilter = () => {
       setFilteredColors((currentColors) => {
         const includes = currentColors.includes(color);
         return includes
-          ? filteredColors.filter((v) => v !== color)
-          : [...filteredColors, color];
+          ? currentColors.filter((v) => v !== color)
+          : [...currentColors, color];
       });
     },
-    [filteredColors]
+    [setFilteredColors]
   );
 
   return (
