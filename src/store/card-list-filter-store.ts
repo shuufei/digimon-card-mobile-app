@@ -1,14 +1,13 @@
-import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
-import { colorList } from '../domains/card';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
-  Color,
   CardType,
-  Lv,
-  Category,
-  COLOR,
   CARD_TYPE,
-  LV,
+  Category,
   CATEGORY,
+  Color,
+  colorList,
+  Lv,
+  LV,
 } from '../domains/card';
 
 type State = {
@@ -17,6 +16,7 @@ type State = {
   lvList: Lv[];
   categories: Category[];
   includesParallel: boolean;
+  executeFilterTimestamp?: number;
 };
 
 const initialState: State = {
@@ -70,6 +70,12 @@ const cardListFilterSlice = createSlice({
         includesParallel: action.payload.includesParallel,
       };
     },
+    executeFilter: (state, _: PayloadAction) => {
+      return {
+        ...state,
+        executeFilterTimestamp: new Date().valueOf(),
+      };
+    },
   },
 });
 
@@ -94,6 +100,10 @@ const includesParallelSelector = createSelector(
   selectSelf,
   (state) => state.includesParallel
 );
+const executeFilterTimestamp = createSelector(
+  selectSelf,
+  (state) => state.executeFilterTimestamp
+);
 
 export const selectors = {
   colorsSelector,
@@ -101,4 +111,5 @@ export const selectors = {
   lvListSelector,
   categoriesSelector,
   includesParallelSelector,
+  executeFilterTimestamp,
 };

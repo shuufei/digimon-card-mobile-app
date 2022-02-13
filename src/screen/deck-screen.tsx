@@ -1,12 +1,67 @@
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { Button, View } from 'native-base';
-import { useEffect, useState } from 'react';
-import { CardList } from '../components/container/card-list';
-import { DeckList } from '../components/container/deck-list';
-import { RootParamList } from '../navigation';
 import { Ionicons } from '@expo/vector-icons';
 import SegmentControl from '@react-native-segmented-control/segmented-control';
-import { FC } from 'react';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { Button, View } from 'native-base';
+import { FC, useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { CardList } from '../components/container/card-list';
+import { DeckList } from '../components/container/deck-list';
+import { useValueRef } from '../components/hooks/use-value-ref';
+import { ALL_CARD_LIST } from '../configs/all-card-list';
+import { Category } from '../domains/card';
+import { RootParamList } from '../navigation';
+import { selectors } from '../store/card-list-filter-store';
+
+const useExecuteCardListFilter = () => {
+  const executeFilterTimestamp = useSelector(selectors.executeFilterTimestamp);
+  const filteredColorsRef = useValueRef(useSelector(selectors.colorsSelector));
+  const filteredCardTypesRef = useValueRef(
+    useSelector(selectors.cardTypesSelector)
+  );
+  const filteredLvListRef = useValueRef(useSelector(selectors.lvListSelector));
+  const filteredCategoriesRef = useValueRef(
+    useSelector(selectors.categoriesSelector)
+  );
+  const filteredIncludesParallelRef = useValueRef(
+    useSelector(selectors.includesParallelSelector)
+  );
+
+  const filteredCardList = useMemo(() => {
+    console.log('execute filter: ', filteredColorsRef.current);
+    return ALL_CARD_LIST.filter((card) => {
+      const isColorMatch = !!card.colors.find((color) => {
+        return filteredColorsRef.current.includes(color);
+      });
+      const isCardTypeMatch = filteredCardTypesRef.current.includes(
+        card.cardtype
+      );
+      const isLvMatch = card.lv && filteredLvListRef.current.includes(card.lv);
+      const isCategoryMatch = filteredCategoriesRef.current.includes(
+        card.category as Category
+      );
+      const isIncludesParallelMatch =
+        card.parallel !== undefined
+          ? filteredIncludesParallelRef.current
+          : true;
+      return (
+        isColorMatch &&
+        isCardTypeMatch &&
+        isLvMatch &&
+        isCategoryMatch &&
+        isIncludesParallelMatch
+      );
+    });
+  }, [
+    executeFilterTimestamp,
+    filteredColorsRef,
+    filteredCardTypesRef,
+    filteredLvListRef,
+    filteredCategoriesRef,
+    filteredIncludesParallelRef,
+  ]);
+
+  return filteredCardList;
+};
 
 const DeckScreenTab = {
   deck: 0,
@@ -39,6 +94,8 @@ export const DeckScreen = () => {
   const { navigate, setOptions } =
     useNavigation<NavigationProp<RootParamList>>();
   const [currentTab, setTab] = useState<number>(DeckScreenTab.deck);
+
+  const filteredCardList = useExecuteCardListFilter();
 
   useEffect(() => {
     setOptions({
@@ -76,7 +133,7 @@ export const DeckScreen = () => {
         <DeckList />
       </View>
       <View display={currentTab === DeckScreenTab.cardList ? 'flex' : 'none'}>
-        <CardList />
+        <CardList cardList={filteredCardList} />
       </View>
     </View>
   );
