@@ -23,7 +23,7 @@ const HeaderLeft: FC<{ show: boolean; onPress: () => void }> = ({
         size="xs"
         variant="ghost"
         _pressed={{
-          background: '#ffffff00',
+          background: '#f0f0f0',
         }}
         onPress={onPress}
       >
