@@ -1,7 +1,7 @@
 import { omit, orderBy } from 'lodash';
-import { FlatList, View } from 'native-base';
-import React, { FC, useMemo } from 'react';
-import { Dimensions, ListRenderItemInfo } from 'react-native';
+import { View } from 'native-base';
+import React, { FC, useEffect, useMemo, useRef } from 'react';
+import { Dimensions, FlatList, ListRenderItemInfo } from 'react-native';
 import { CardInfo } from '../../domains/card';
 import { Card } from '../presentation/card';
 
@@ -13,6 +13,12 @@ type FlatListItemData = CardInfo & {
 
 export const CardList: FC<{ cardList: CardInfo[] }> = React.memo(
   ({ cardList }) => {
+    const scrollViewRef = useRef<FlatList>(null);
+
+    useEffect(() => {
+      scrollViewRef.current?.scrollToOffset({ offset: 0 });
+    }, [cardList]);
+
     const columns = 4;
     const gap = 1.5;
     const windowWidth = Dimensions.get('window').width;
@@ -29,7 +35,12 @@ export const CardList: FC<{ cardList: CardInfo[] }> = React.memo(
 
     return (
       <View>
+        {/**
+         * NOTE:
+         * native-baseのFlatListがrefプロパティを受け付けないため、react-nativeのFlatListを利用する
+         */}
         <FlatList
+          ref={scrollViewRef}
           keyExtractor={(item) => `${item.no}-${item.parallel || 'regular'}`}
           data={orderBy(cardList, ['cardtype', 'lv', 'color']).map((d) => ({
             ...d,
