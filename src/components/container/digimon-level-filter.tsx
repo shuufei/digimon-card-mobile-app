@@ -4,11 +4,9 @@ import { useCallback, useState } from 'react';
 import {
   convertToDisplayDigimonLvFromDigimonLv,
   Lv,
-  LV,
+  lvList,
 } from '../../domains/card';
 import { FilterCheckItem } from '../presentation/filter-check-item';
-
-const lvList: Lv[] = Object.entries(LV).map((v) => v[0] as Lv);
 
 export const DigimonLevelFilter = () => {
   const [filteredLv, setFilteredLv] = useState(lvList);

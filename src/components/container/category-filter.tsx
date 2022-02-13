@@ -2,15 +2,11 @@ import { last } from 'lodash';
 import { Text, View } from 'native-base';
 import { useCallback, useState } from 'react';
 import {
-  CATEGORY,
   Category,
+  categoryList,
   convertToDisplayCategoryFromCategory,
 } from '../../domains/card';
 import { FilterCheckItem } from '../presentation/filter-check-item';
-
-const categoryList: Category[] = Object.entries(CATEGORY).map(
-  (v) => v[0] as Category
-);
 
 export const CategoryFilter = () => {
   const [filteredCategory, setFilteredCategory] = useState(categoryList);

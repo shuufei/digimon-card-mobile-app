@@ -3,14 +3,10 @@ import { Text, View } from 'native-base';
 import { useCallback, useState } from 'react';
 import {
   CardType,
-  CARD_TYPE,
+  cardTypeList,
   convertToDisplayCardTypeFromCardType,
 } from '../../domains/card';
 import { FilterCheckItem } from '../presentation/filter-check-item';
-
-const cardTypeList: CardType[] = Object.entries(CARD_TYPE).map(
-  (v) => v[0] as CardType
-);
 
 export const CardTypeFilter = () => {
   const [filteredCardTypes, setFilteredCardTypes] = useState(cardTypeList);

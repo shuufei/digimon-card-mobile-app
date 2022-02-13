@@ -213,3 +213,13 @@ export const convertToDisplayCategoryFromCategory = (
 export const colorList = Object.entries(COLOR)
   .map((v) => v[0] as Color)
   .filter((v) => v !== '8_multicolor');
+
+export const cardTypeList: CardType[] = Object.entries(CARD_TYPE).map(
+  (v) => v[0] as CardType
+);
+
+export const lvList: Lv[] = Object.entries(LV).map((v) => v[0] as Lv);
+
+export const categoryList: Category[] = Object.entries(CATEGORY).map(
+  (v) => v[0] as Category
+);
