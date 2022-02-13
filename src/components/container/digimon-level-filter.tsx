@@ -7,20 +7,26 @@ import {
   lvList,
 } from '../../domains/card';
 import { FilterCheckItem } from '../presentation/filter-check-item';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectors, actions } from '../../store/card-list-filter-store';
 
 export const DigimonLevelFilter = () => {
-  const [filteredLv, setFilteredLv] = useState(lvList);
+  const dispatch = useDispatch();
+  const filteredLv = useSelector(selectors.lvListSelector);
+
+  const setFilteredLv = useCallback((_lvList: Lv[]) => {
+    dispatch(actions.updateLv({ lvList: _lvList }));
+  }, []);
 
   const toggleFilteredColor = useCallback(
     (lv: Lv) => {
-      setFilteredLv((currentLv) => {
-        const includes = currentLv.includes(lv);
-        return includes
-          ? currentLv.filter((v) => v !== lv)
-          : [...currentLv, lv];
-      });
+      const includes = filteredLv.includes(lv);
+      const updated = includes
+        ? filteredLv.filter((v) => v !== lv)
+        : [...filteredLv, lv];
+      setFilteredLv(updated);
     },
-    [setFilteredLv]
+    [filteredLv, setFilteredLv]
   );
 
   return (

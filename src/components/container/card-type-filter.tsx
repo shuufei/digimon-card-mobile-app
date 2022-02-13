@@ -1,26 +1,35 @@
 import { last } from 'lodash';
 import { Text, View } from 'native-base';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   CardType,
   cardTypeList,
   convertToDisplayCardTypeFromCardType,
 } from '../../domains/card';
+import { actions, selectors } from '../../store/card-list-filter-store';
 import { FilterCheckItem } from '../presentation/filter-check-item';
 
 export const CardTypeFilter = () => {
-  const [filteredCardTypes, setFilteredCardTypes] = useState(cardTypeList);
+  const dispatch = useDispatch();
+  const filteredCardTypes = useSelector(selectors.cardTypesSelector);
+
+  const setFilteredCardTypes = useCallback(
+    (cardTypes: CardType[]) => {
+      dispatch(actions.updateCardTypes({ cardTypes }));
+    },
+    [dispatch]
+  );
 
   const toggleFilteredColor = useCallback(
     (cardType: CardType) => {
-      setFilteredCardTypes((currentCardTypes) => {
-        const includes = currentCardTypes.includes(cardType);
-        return includes
-          ? currentCardTypes.filter((v) => v !== cardType)
-          : [...currentCardTypes, cardType];
-      });
+      const includes = filteredCardTypes.includes(cardType);
+      const updated = includes
+        ? filteredCardTypes.filter((v) => v !== cardType)
+        : [...filteredCardTypes, cardType];
+      setFilteredCardTypes(updated);
     },
-    [setFilteredCardTypes]
+    [filteredCardTypes, setFilteredCardTypes]
   );
 
   return (

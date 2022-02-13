@@ -40,18 +40,18 @@ export const ColorFilter = () => {
     (colors: Color[]) => {
       dispatch(actions.updateColors({ colors }));
     },
-    [filteredColors, dispatch]
+    [dispatch]
   );
 
   const toggleFilteredColor = useCallback(
     (color: Color) => {
       const includes = filteredColors.includes(color);
-      const updates = includes
+      const updated = includes
         ? filteredColors.filter((v) => v !== color)
         : [...filteredColors, color];
-      setFilteredColors(updates);
+      setFilteredColors(updated);
     },
-    [setFilteredColors]
+    [filteredColors, setFilteredColors]
   );
 
   return (

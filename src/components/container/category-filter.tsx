@@ -1,26 +1,31 @@
 import { last } from 'lodash';
 import { Text, View } from 'native-base';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Category,
   categoryList,
   convertToDisplayCategoryFromCategory,
 } from '../../domains/card';
+import { selectors, actions } from '../../store/card-list-filter-store';
 import { FilterCheckItem } from '../presentation/filter-check-item';
 
 export const CategoryFilter = () => {
-  const [filteredCategory, setFilteredCategory] = useState(categoryList);
+  const dispatch = useDispatch();
+  const filteredCategories = useSelector(selectors.categoriesSelector);
+  const setFilteredCategories = useCallback((categories: Category[]) => {
+    dispatch(actions.updateCategories({ categories }));
+  }, []);
 
   const toggleFilteredColor = useCallback(
     (lv: Category) => {
-      setFilteredCategory((currentCategory) => {
-        const includes = currentCategory.includes(lv);
-        return includes
-          ? currentCategory.filter((v) => v !== lv)
-          : [...currentCategory, lv];
-      });
+      const includes = filteredCategories.includes(lv);
+      const updated = includes
+        ? filteredCategories.filter((v) => v !== lv)
+        : [...filteredCategories, lv];
+      setFilteredCategories(updated);
     },
-    [setFilteredCategory]
+    [filteredCategories, setFilteredCategories]
   );
 
   return (
@@ -33,7 +38,7 @@ export const CategoryFilter = () => {
           return (
             <FilterCheckItem
               key={category}
-              checked={filteredCategory.includes(category)}
+              checked={filteredCategories.includes(category)}
               showDivider={category !== last(categoryList)}
               isPressable={true}
               onPress={() => toggleFilteredColor(category)}

@@ -37,6 +37,39 @@ const cardListFilterSlice = createSlice({
         colors: action.payload.colors,
       };
     },
+    updateCardTypes: (
+      state,
+      action: PayloadAction<{ cardTypes: CardType[] }>
+    ) => {
+      return {
+        ...state,
+        cardTypes: action.payload.cardTypes,
+      };
+    },
+    updateLv: (state, action: PayloadAction<{ lvList: Lv[] }>) => {
+      return {
+        ...state,
+        lvList: action.payload.lvList,
+      };
+    },
+    updateCategories: (
+      state,
+      action: PayloadAction<{ categories: Category[] }>
+    ) => {
+      return {
+        ...state,
+        categories: action.payload.categories,
+      };
+    },
+    updateIncludesParallel: (
+      state,
+      action: PayloadAction<{ includesParallel: boolean }>
+    ) => {
+      return {
+        ...state,
+        includesParallel: action.payload.includesParallel,
+      };
+    },
   },
 });
 
