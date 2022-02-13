@@ -27,7 +27,6 @@ const useExecuteCardListFilter = () => {
   );
 
   const filteredCardList = useMemo(() => {
-    console.log('execute filter: ', filteredColorsRef.current);
     return ALL_CARD_LIST.filter((card) => {
       const isColorMatch = !!card.colors.find((color) => {
         return filteredColorsRef.current.includes(color);
