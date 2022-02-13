@@ -31,13 +31,25 @@ const useExecuteCardListFilter = () => {
       const isColorMatch = !!card.colors.find((color) => {
         return filteredColorsRef.current.includes(color);
       });
+      if (!isColorMatch) {
+        return false;
+      }
       const isCardTypeMatch = filteredCardTypesRef.current.includes(
         card.cardtype
       );
+      if (!isCardTypeMatch) {
+        return false;
+      }
       const isLvMatch = card.lv && filteredLvListRef.current.includes(card.lv);
+      if (!isLvMatch) {
+        return false;
+      }
       const isCategoryMatch = filteredCategoriesRef.current.includes(
         card.category as Category
       );
+      if (!isCategoryMatch) {
+        return false;
+      }
       const isIncludesParallelMatch =
         card.parallel !== undefined
           ? filteredIncludesParallelRef.current
