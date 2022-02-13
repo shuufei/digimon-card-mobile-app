@@ -13,7 +13,8 @@ import { actions } from '../store/card-list-filter-store';
 export const CardListFilterModalScreen: FC = () => {
   const dispatch = useDispatch();
 
-  const { setOptions, goBack } = useNavigation<NavigationProp<RootParamList>>();
+  const { setOptions, goBack, addListener } =
+    useNavigation<NavigationProp<RootParamList>>();
   useEffect(() => {
     setOptions({
       headerRight: () => {
@@ -31,6 +32,10 @@ export const CardListFilterModalScreen: FC = () => {
           </Button>
         );
       },
+    });
+
+    addListener('beforeRemove', () => {
+      dispatch(actions.executeFilter());
     });
   }, []);
 
