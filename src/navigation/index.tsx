@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { FC } from 'react';
 import { CardModalScreen } from '../screen/card-modal-screen';
-import { DeckFilterModalScreen } from '../screen/deck-filter-modal-screen';
+import { CardListFilterModalScreen } from '../screen/card-list-filter-modal-screen';
 import { DeckScreen } from '../screen/deck-screen';
 import { VSScreen } from '../screen/vs-screen';
 
@@ -40,7 +40,7 @@ export const Navigation = () => (
       />
       <Stack.Screen
         name="DeckFilterModal"
-        component={DeckFilterModalScreen}
+        component={CardListFilterModalScreen}
         options={{ presentation: 'modal', title: 'フィルタ' }}
       />
       <Stack.Screen

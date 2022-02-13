@@ -8,7 +8,7 @@ import { DigimonLevelFilter } from '../components/container/digimon-level-filter
 import { ParallelFilter } from '../components/container/parallel-filter';
 import { RootParamList } from '../navigation';
 
-export const DeckFilterModalScreen: FC = () => {
+export const CardListFilterModalScreen: FC = () => {
   const { setOptions, goBack } = useNavigation<NavigationProp<RootParamList>>();
   useEffect(() => {
     setOptions({
