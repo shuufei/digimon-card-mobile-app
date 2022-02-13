@@ -1,16 +1,44 @@
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import SegmentControl from '@react-native-segmented-control/segmented-control';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { Button, View } from 'native-base';
 import { FC, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { CardList } from '../components/container/card-list';
 import { DeckList } from '../components/container/deck-list';
 import { useValueRef } from '../components/hooks/use-value-ref';
 import { ALL_CARD_LIST } from '../configs/all-card-list';
+import { storageKeys } from '../configs/storage';
 import { Category } from '../domains/card';
 import { RootParamList } from '../navigation';
-import { selectors } from '../store/card-list-filter-store';
+import {
+  actions,
+  selectors,
+  State as CardListFilterState,
+} from '../store/card-list-filter-store';
+
+const useInitStore = () => {
+  const dispatch = useDispatch();
+
+  /**
+   * card list filter store
+   */
+  useEffect(() => {
+    const dispatchInitCardListFilterStore = async () => {
+      try {
+        const value = await AsyncStorage.getItem(
+          storageKeys.cardListFilterStore
+        );
+        const filterSettings =
+          value && (JSON.parse(value) as CardListFilterState);
+        filterSettings && dispatch(actions.set({ state: filterSettings }));
+        dispatch(actions.executeFilter());
+      } catch (error) {}
+    };
+    dispatchInitCardListFilterStore();
+  }, [dispatch]);
+};
 
 const useExecuteCardListFilter = () => {
   const executeFilterTimestamp = useSelector(selectors.executeFilterTimestamp);
@@ -102,6 +130,8 @@ const HeaderLeft: FC<{ show: boolean; onPress: () => void }> = ({
 };
 
 export const DeckScreen = () => {
+  useInitStore();
+
   const { navigate, setOptions } =
     useNavigation<NavigationProp<RootParamList>>();
   const [currentTab, setTab] = useState<number>(DeckScreenTab.deck);
@@ -138,6 +168,7 @@ export const DeckScreen = () => {
       },
     });
   }, [setOptions, currentTab]);
+
   return (
     <View>
       <View display={currentTab === DeckScreenTab.deck ? 'flex' : 'none'}>

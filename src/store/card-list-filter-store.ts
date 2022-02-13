@@ -10,7 +10,7 @@ import {
   LV,
 } from '../domains/card';
 
-type State = {
+export type State = {
   colors: Color[];
   cardTypes: CardType[];
   lvList: Lv[];
@@ -31,6 +31,9 @@ const cardListFilterSlice = createSlice({
   name: 'card-list-filter',
   initialState: initialState,
   reducers: {
+    set: (_, action: PayloadAction<{ state: State }>) => {
+      return action.payload.state;
+    },
     updateColors: (state, action: PayloadAction<{ colors: Color[] }>) => {
       return {
         ...state,
@@ -106,6 +109,7 @@ const executeFilterTimestamp = createSelector(
 );
 
 export const selectors = {
+  selectSelf,
   colorsSelector,
   cardTypesSelector,
   lvListSelector,

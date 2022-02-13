@@ -1,17 +1,28 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { Button, ScrollView, VStack } from 'native-base';
-import { FC, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { FC, useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { CardTypeFilter } from '../components/container/card-type-filter';
 import { CategoryFilter } from '../components/container/category-filter';
 import { ColorFilter } from '../components/container/color-filter';
 import { DigimonLevelFilter } from '../components/container/digimon-level-filter';
 import { ParallelFilter } from '../components/container/parallel-filter';
+import { storageKeys } from '../configs/storage';
 import { RootParamList } from '../navigation';
-import { actions } from '../store/card-list-filter-store';
+import { actions, selectors } from '../store/card-list-filter-store';
 
 export const CardListFilterModalScreen: FC = () => {
+  const filterSettings = useSelector(selectors.selectSelf);
   const dispatch = useDispatch();
+
+  const executeFilter = useCallback(async () => {
+    await AsyncStorage.setItem(
+      storageKeys.cardListFilterStore,
+      JSON.stringify(filterSettings)
+    );
+    dispatch(actions.executeFilter());
+  }, [filterSettings, dispatch]);
 
   const { setOptions, goBack, addListener } =
     useNavigation<NavigationProp<RootParamList>>();
@@ -25,7 +36,7 @@ export const CardListFilterModalScreen: FC = () => {
             _pressed={{ background: '#f0f0f0' }}
             onPress={() => {
               goBack();
-              dispatch(actions.executeFilter());
+              executeFilter();
             }}
           >
             完了
@@ -35,9 +46,9 @@ export const CardListFilterModalScreen: FC = () => {
     });
 
     addListener('beforeRemove', () => {
-      dispatch(actions.executeFilter());
+      executeFilter();
     });
-  }, []);
+  }, [executeFilter]);
 
   return (
     <ScrollView>
