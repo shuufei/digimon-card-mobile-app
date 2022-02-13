@@ -43,8 +43,7 @@ export type Color = keyof typeof COLOR;
 
 export type CardInfo = {
   no: string;
-  lv?: string;
-  // lv?: Lv;
+  lv?: Lv;
   rarity: string;
   cardtype: CardType;
   parallel?: string;

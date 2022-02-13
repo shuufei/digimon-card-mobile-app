@@ -2,8 +2,10 @@ import { omit, orderBy } from 'lodash';
 import { FlatList, View } from 'native-base';
 import { FC, useMemo } from 'react';
 import { Dimensions, ListRenderItemInfo } from 'react-native';
+import { useSelector } from 'react-redux';
 import { ALL_CARD_LIST } from '../../configs/all-card-list';
-import { CardInfo } from '../../domains/card';
+import { CardInfo, Category } from '../../domains/card';
+import { selectors } from '../../store/card-list-filter-store';
 import { Card } from '../presentation/card';
 
 type FlatListItemData = CardInfo & {
@@ -30,16 +32,54 @@ export const CardList: FC = () => {
     };
   }, [windowWidth]);
 
+  const filteredColors = useSelector(selectors.colorsSelector);
+  const filteredCardTypes = useSelector(selectors.cardTypesSelector);
+  const filteredLvList = useSelector(selectors.lvListSelector);
+  const filteredCategories = useSelector(selectors.categoriesSelector);
+  const filteredIncludesParallel = useSelector(
+    selectors.includesParallelSelector
+  );
+
+  const filteredCardList = useMemo(() => {
+    return ALL_CARD_LIST.filter((card) => {
+      const isColorMatch = !!card.colors.find((color) => {
+        return filteredColors.includes(color);
+      });
+      const isCardTypeMatch = filteredCardTypes.includes(card.cardtype);
+      const isLvMatch = card.lv && filteredLvList.includes(card.lv);
+      const isCategoryMatch = filteredCategories.includes(
+        card.category as Category
+      );
+      const isIncludesParallelMatch =
+        card.parallel !== undefined ? filteredIncludesParallel : true;
+      return (
+        isColorMatch &&
+        isCardTypeMatch &&
+        isLvMatch &&
+        isCategoryMatch &&
+        isIncludesParallelMatch
+      );
+    });
+  }, [
+    filteredColors,
+    filteredCardTypes,
+    filteredLvList,
+    filteredCategories,
+    filteredIncludesParallel,
+  ]);
+
   return (
     <View>
       <FlatList
         keyExtractor={(item) => `${item.no}-${item.parallel || 'regular'}`}
-        data={orderBy(ALL_CARD_LIST, ['cardtype', 'lv', 'color']).map((d) => ({
-          ...d,
-          width: cardWidth,
-          height: cardHeight,
-          padding: gap,
-        }))}
+        data={orderBy(filteredCardList, ['cardtype', 'lv', 'color']).map(
+          (d) => ({
+            ...d,
+            width: cardWidth,
+            height: cardHeight,
+            padding: gap,
+          })
+        )}
         renderItem={({ item }: ListRenderItemInfo<FlatListItemData>) => {
           return (
             <Card

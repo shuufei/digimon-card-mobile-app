@@ -18,7 +18,7 @@ import ST06 from '../../assets/cardInfo/ST06.json';
 import ST07 from '../../assets/cardInfo/ST07.json';
 import ST08 from '../../assets/cardInfo/ST08.json';
 import ST09 from '../../assets/cardInfo/ST09.json';
-import { CardInfo, COLOR, Color, CardType } from '../domains/card';
+import { CardInfo, COLOR, Color, CardType, Lv } from '../domains/card';
 
 export const convertFromApiColorToColor = (color: string): Color => {
   switch (color) {
@@ -64,6 +64,15 @@ export const convertFromApiCarttypeToCardtype = (
   }
 };
 
+export const convertFromApiLvToLv = (lv?: string): Lv => {
+  switch (lv) {
+    case undefined:
+      return '-';
+    default:
+      return lv as Lv;
+  }
+};
+
 export const ALL_CARD_LIST: CardInfo[] = [
   ...BT01.cardInfoList.map((v) => ({ ...v, category: 'BT01' })),
   ...BT02.cardInfoList.map((v) => ({ ...v, category: 'BT02' })),
@@ -90,4 +99,5 @@ export const ALL_CARD_LIST: CardInfo[] = [
   color: convertFromApiColorToColor(v.color),
   colors: convertFromApiColorsToColors(v.color),
   cardtype: convertFromApiCarttypeToCardtype(v.cardtype),
+  lv: convertFromApiLvToLv(v.lv),
 }));
