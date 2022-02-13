@@ -153,6 +153,7 @@ export const CATEGORY = {
   ST08: 'ST08',
   ST09: 'ST09',
   ST10: 'ST10',
+  ST11: 'ST11',
   PRO: 'PRO',
 } as const;
 
@@ -202,6 +203,8 @@ export const convertToDisplayCategoryFromCategory = (
       return 'ST-09 究極の古代竜';
     case 'ST10':
       return 'ST-10 異世界の軍師';
+    case 'ST11':
+      return 'ST-11 スペシャルエントリーセット';
     case 'PRO':
       return 'PRO プロモーション';
     default:

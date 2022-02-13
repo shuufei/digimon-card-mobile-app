@@ -18,6 +18,8 @@ import ST06 from '../../assets/cardInfo/ST06.json';
 import ST07 from '../../assets/cardInfo/ST07.json';
 import ST08 from '../../assets/cardInfo/ST08.json';
 import ST09 from '../../assets/cardInfo/ST09.json';
+import ST10 from '../../assets/cardInfo/ST10.json';
+import ST11 from '../../assets/cardInfo/ST11.json';
 import { CardInfo, COLOR, Color, CardType, Lv } from '../domains/card';
 
 export const convertFromApiColorToColor = (color: string): Color => {
@@ -94,6 +96,8 @@ export const ALL_CARD_LIST: CardInfo[] = [
   ...ST07.cardInfoList.map((v) => ({ ...v, category: 'ST07' })),
   ...ST08.cardInfoList.map((v) => ({ ...v, category: 'ST08' })),
   ...ST09.cardInfoList.map((v) => ({ ...v, category: 'ST09' })),
+  ...ST10.cardInfoList.map((v) => ({ ...v, category: 'ST10' })),
+  ...ST11.cardInfoList.map((v) => ({ ...v, category: 'ST11' })),
 ].map((v) => ({
   ...v,
   color: convertFromApiColorToColor(v.color),
