@@ -1,12 +1,14 @@
 import { last } from 'lodash';
 import { Text, View } from 'native-base';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   COLOR,
   Color,
   convertToColorCodeFromColor,
   convertToDisplayColorFromColor,
 } from '../../domains/card';
+import { actions, selectors } from '../../store/card-list-filter-store';
 import { FilterCheckItem } from '../presentation/filter-check-item';
 
 const colorList: Color[] = Object.entries(COLOR)
@@ -35,16 +37,23 @@ export const convertToBorderColorCodeFromColor = (color: Color): string => {
 };
 
 export const ColorFilter = () => {
-  const [filteredColors, setFilteredColors] = useState(colorList);
+  const dispatch = useDispatch();
+  const filteredColors = useSelector(selectors.colorsSelector);
+
+  const setFilteredColors = useCallback(
+    (colors: Color[]) => {
+      dispatch(actions.updateColors({ colors }));
+    },
+    [filteredColors, dispatch]
+  );
 
   const toggleFilteredColor = useCallback(
     (color: Color) => {
-      setFilteredColors((currentColors) => {
-        const includes = currentColors.includes(color);
-        return includes
-          ? currentColors.filter((v) => v !== color)
-          : [...currentColors, color];
-      });
+      const includes = filteredColors.includes(color);
+      const updates = includes
+        ? filteredColors.filter((v) => v !== color)
+        : [...filteredColors, color];
+      setFilteredColors(updates);
     },
     [setFilteredColors]
   );
