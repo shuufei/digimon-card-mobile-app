@@ -209,3 +209,7 @@ export const convertToDisplayCategoryFromCategory = (
       return category;
   }
 };
+
+export const colorList = Object.entries(COLOR)
+  .map((v) => v[0] as Color)
+  .filter((v) => v !== '8_multicolor');

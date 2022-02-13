@@ -1,4 +1,5 @@
 import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
+import { colorList } from '../domains/card';
 import {
   Color,
   CardType,
@@ -19,9 +20,7 @@ type State = {
 };
 
 const initialState: State = {
-  colors: Object.entries(COLOR)
-    .map((v) => v[0] as Color)
-    .filter((v) => v !== '8_multicolor'),
+  colors: colorList,
   cardTypes: Object.entries(CARD_TYPE).map((v) => v[0] as CardType),
   lvList: Object.entries(LV).map((v) => v[0] as Lv),
   categories: Object.entries(CATEGORY).map((v) => v[0] as Category),

@@ -3,17 +3,13 @@ import { Text, View } from 'native-base';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  COLOR,
   Color,
+  colorList,
   convertToColorCodeFromColor,
   convertToDisplayColorFromColor,
 } from '../../domains/card';
 import { actions, selectors } from '../../store/card-list-filter-store';
 import { FilterCheckItem } from '../presentation/filter-check-item';
-
-const colorList: Color[] = Object.entries(COLOR)
-  .map((v) => v[0] as Color)
-  .filter((v) => v !== '8_multicolor');
 
 export const convertToBorderColorCodeFromColor = (color: Color): string => {
   switch (color) {
