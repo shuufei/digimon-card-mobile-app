@@ -2,9 +2,12 @@ import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
 
 export type State = {
   selectedDeckId?: string;
+  isCreateMode: boolean;
 };
 
-const initialState: State = {};
+const initialState: State = {
+  isCreateMode: false,
+};
 
 const deckSlice = createSlice({
   name: 'deck',
@@ -16,6 +19,15 @@ const deckSlice = createSlice({
     ) => {
       return { ...state, selectedDeckId: action.payload.deckId };
     },
+    setCreateMode: (
+      state,
+      action: PayloadAction<{ isCreateMode: State['isCreateMode'] }>
+    ) => {
+      return {
+        ...state,
+        isCreateMode: action.payload.isCreateMode,
+      };
+    },
   },
 });
 
@@ -26,11 +38,16 @@ export const reducers = deckSlice.reducer;
 export const name = deckSlice.name;
 
 const selectSelf = (state: { [name]: State }) => state[name];
-const selectedDeckId = createSelector(
+const selectedDeckIdSelector = createSelector(
   selectSelf,
   (state) => state.selectedDeckId
 );
+const isCreateModeSelector = createSelector(
+  selectSelf,
+  (state) => state.isCreateMode
+);
 export const selectors = {
   selectSelf,
-  selectedDeckId,
+  selectedDeckIdSelector,
+  isCreateModeSelector,
 };

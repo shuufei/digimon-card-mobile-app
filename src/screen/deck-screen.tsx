@@ -1,14 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
-import BottomSheet from '@gorhom/bottom-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SegmentControl from '@react-native-segmented-control/segmented-control';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { Button, Menu, Text, View } from 'native-base';
-import { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { Button, Menu, View, Text } from 'native-base';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardList } from '../components/container/card-list';
 import { DeckList } from '../components/container/deck-list';
+import { DeckScreenSheet } from '../components/container/deck-screen-sheet';
 import { useValueRef } from '../components/hooks/use-value-ref';
 import { ALL_CARD_LIST } from '../configs/all-card-list';
 import { storageKeys } from '../configs/storage';
@@ -19,10 +19,7 @@ import {
   selectors as cardListFilterStoreSelectors,
   State as CardListFilterState,
 } from '../store/card-list-filter-store';
-import {
-  actions as deckStoreActions,
-  selectors as deckStoreSelectors,
-} from '../store/deck-store';
+import * as deckStore from '../store/deck-store';
 
 const useInitStore = () => {
   const dispatch = useDispatch();
@@ -136,6 +133,7 @@ const CardListFilterButton: FC<{ onPress: () => void }> = ({ onPress }) => {
 };
 
 const DeckMenuButton: FC<{ onPress: () => void }> = ({ onPress }) => {
+  const dispatch = useDispatch();
   return (
     <Menu
       trigger={(triggerProps) => {
@@ -153,31 +151,38 @@ const DeckMenuButton: FC<{ onPress: () => void }> = ({ onPress }) => {
           </Button>
         );
       }}
+      width="160"
+      backgroundColor="white"
+      px={2}
+      mr={4}
     >
-      <Menu.Item>新規作成</Menu.Item>
+      <Menu.Item
+        borderRadius={3}
+        onPress={() => {
+          dispatch(deckStore.actions.setCreateMode({ isCreateMode: true }));
+        }}
+      >
+        <Text fontSize={14} fontWeight="semibold">
+          新規作成
+        </Text>
+      </Menu.Item>
+      <Menu.Item borderRadius={3}>
+        <Text fontSize={14} fontWeight="semibold">
+          インポート
+        </Text>
+      </Menu.Item>
     </Menu>
   );
 };
 
 export const DeckScreen = () => {
   useInitStore();
-  const dispatch = useDispatch();
 
   const { navigate, setOptions } =
     useNavigation<NavigationProp<RootParamList>>();
 
   const [currentTab, setTab] = useState<number>(DeckScreenTab.deck);
   const filteredCardList = useExecuteCardListFilter();
-  const selectedDeckId = useSelector(deckStoreSelectors.selectedDeckId);
-
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['20%', '50%', '95%'], []);
-
-  useEffect(() => {
-    selectedDeckId
-      ? bottomSheetRef.current?.expand()
-      : bottomSheetRef.current?.close();
-  }, [selectedDeckId, bottomSheetRef]);
 
   useEffect(() => {
     setOptions({
@@ -223,25 +228,7 @@ export const DeckScreen = () => {
       <View display={currentTab === DeckScreenTab.cardList ? 'flex' : 'none'}>
         <CardList cardList={filteredCardList} />
       </View>
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={-1}
-        snapPoints={snapPoints}
-        style={styles.bottonSheet}
-      >
-        <View flexDirection="row" px={2}>
-          <Button
-            variant="ghost"
-            colorScheme="blue"
-            onPress={() => {
-              dispatch(deckStoreActions.selectDeck({ deckId: undefined }));
-            }}
-          >
-            閉じる
-          </Button>
-        </View>
-        <Text>Deck Detail</Text>
-      </BottomSheet>
+      <DeckScreenSheet />
     </View>
   );
 };
