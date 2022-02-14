@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SegmentControl from '@react-native-segmented-control/segmented-control';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { Button, View } from 'native-base';
+import { Button, Menu, View } from 'native-base';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardList } from '../components/container/card-list';
@@ -107,25 +107,42 @@ const DeckScreenTab = {
   cardList: 1,
 } as const;
 
-const HeaderLeft: FC<{ show: boolean; onPress: () => void }> = ({
-  show,
-  onPress,
-}) => {
-  return show ? (
-    <View paddingLeft={2}>
-      <Button
-        size="xs"
-        variant="ghost"
-        _pressed={{
-          background: '#f0f0f0',
-        }}
-        onPress={onPress}
-      >
-        <Ionicons name="ios-filter" size={24} />
-      </Button>
-    </View>
-  ) : (
-    <></>
+const CardListFilterButton: FC<{ onPress: () => void }> = ({ onPress }) => {
+  return (
+    <Button
+      size="xs"
+      variant="ghost"
+      _pressed={{
+        background: '#f0f0f0',
+      }}
+      onPress={onPress}
+    >
+      <Ionicons name="ios-filter" size={24} />
+    </Button>
+  );
+};
+
+const DeckMenuButton: FC<{ onPress: () => void }> = ({ onPress }) => {
+  return (
+    <Menu
+      trigger={(triggerProps) => {
+        return (
+          <Button
+            size="xs"
+            variant="ghost"
+            _pressed={{
+              background: '#f0f0f0',
+            }}
+            onPress={onPress}
+            {...triggerProps}
+          >
+            <Ionicons name="ellipsis-horizontal-circle-outline" size={24} />
+          </Button>
+        );
+      }}
+    >
+      <Menu.Item>新規作成</Menu.Item>
+    </Menu>
   );
 };
 
@@ -141,16 +158,6 @@ export const DeckScreen = () => {
   useEffect(() => {
     setOptions({
       title: 'デッキ構築',
-      headerLeft: () => {
-        return (
-          <HeaderLeft
-            show={currentTab == DeckScreenTab.cardList}
-            onPress={() => {
-              navigate('DeckFilterModal');
-            }}
-          />
-        );
-      },
       headerTitle: () => {
         const tabTitles = ['デッキ', 'カードリスト'];
         return (
@@ -164,6 +171,21 @@ export const DeckScreen = () => {
               setTab(tabTitles.findIndex((title) => title === value) ?? 0);
             }}
           />
+        );
+      },
+      headerRight: () => {
+        return (
+          <View paddingRight={2}>
+            {currentTab === DeckScreenTab.deck ? (
+              <DeckMenuButton onPress={() => {}} />
+            ) : (
+              <CardListFilterButton
+                onPress={() => {
+                  navigate('DeckFilterModal');
+                }}
+              />
+            )}
+          </View>
         );
       },
     });
