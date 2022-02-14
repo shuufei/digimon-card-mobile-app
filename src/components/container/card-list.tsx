@@ -15,9 +15,13 @@ export const CardList: FC<{ cardList: CardInfo[] }> = React.memo(
   ({ cardList }) => {
     const scrollViewRef = useRef<FlatList>(null);
 
-    useEffect(() => {
-      scrollViewRef.current?.scrollToOffset({ offset: 0 });
-    }, [cardList]);
+    /**
+     * NOTE:
+     * フィルタ変更しない時もスクロールされてしまうため、一時的に無効化する
+     */
+    // useEffect(() => {
+    //   scrollViewRef.current?.scrollToOffset({ offset: 0 });
+    // }, [cardList]);
 
     const columns = 4;
     const gap = 1.5;
