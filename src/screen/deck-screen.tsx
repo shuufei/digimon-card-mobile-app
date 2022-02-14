@@ -1,9 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
+import BottomSheet from '@gorhom/bottom-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SegmentControl from '@react-native-segmented-control/segmented-control';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { Button, Menu, View } from 'native-base';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { Button, Menu, Text, View } from 'native-base';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardList } from '../components/container/card-list';
 import { DeckList } from '../components/container/deck-list';
@@ -13,10 +15,14 @@ import { storageKeys } from '../configs/storage';
 import { Category } from '../domains/card';
 import { RootParamList } from '../navigation';
 import {
-  actions,
-  selectors,
+  actions as cardListFilterStoreActions,
+  selectors as cardListFilterStoreSelectors,
   State as CardListFilterState,
 } from '../store/card-list-filter-store';
+import {
+  actions as deckStoreActions,
+  selectors as deckStoreSelectors,
+} from '../store/deck-store';
 
 const useInitStore = () => {
   const dispatch = useDispatch();
@@ -32,8 +38,9 @@ const useInitStore = () => {
         );
         const filterSettings =
           value && (JSON.parse(value) as CardListFilterState);
-        filterSettings && dispatch(actions.set({ state: filterSettings }));
-        dispatch(actions.executeFilter());
+        filterSettings &&
+          dispatch(cardListFilterStoreActions.set({ state: filterSettings }));
+        dispatch(cardListFilterStoreActions.executeFilter());
       } catch (error) {}
     };
     dispatchInitCardListFilterStore();
@@ -41,17 +48,23 @@ const useInitStore = () => {
 };
 
 const useExecuteCardListFilter = () => {
-  const executeFilterTimestamp = useSelector(selectors.executeFilterTimestamp);
-  const filteredColorsRef = useValueRef(useSelector(selectors.colorsSelector));
-  const filteredCardTypesRef = useValueRef(
-    useSelector(selectors.cardTypesSelector)
+  const executeFilterTimestamp = useSelector(
+    cardListFilterStoreSelectors.executeFilterTimestamp
   );
-  const filteredLvListRef = useValueRef(useSelector(selectors.lvListSelector));
+  const filteredColorsRef = useValueRef(
+    useSelector(cardListFilterStoreSelectors.colorsSelector)
+  );
+  const filteredCardTypesRef = useValueRef(
+    useSelector(cardListFilterStoreSelectors.cardTypesSelector)
+  );
+  const filteredLvListRef = useValueRef(
+    useSelector(cardListFilterStoreSelectors.lvListSelector)
+  );
   const filteredCategoriesRef = useValueRef(
-    useSelector(selectors.categoriesSelector)
+    useSelector(cardListFilterStoreSelectors.categoriesSelector)
   );
   const filteredIncludesParallelRef = useValueRef(
-    useSelector(selectors.includesParallelSelector)
+    useSelector(cardListFilterStoreSelectors.includesParallelSelector)
   );
 
   const filteredCardList = useMemo(() => {
@@ -148,12 +161,23 @@ const DeckMenuButton: FC<{ onPress: () => void }> = ({ onPress }) => {
 
 export const DeckScreen = () => {
   useInitStore();
+  const dispatch = useDispatch();
 
   const { navigate, setOptions } =
     useNavigation<NavigationProp<RootParamList>>();
-  const [currentTab, setTab] = useState<number>(DeckScreenTab.deck);
 
+  const [currentTab, setTab] = useState<number>(DeckScreenTab.deck);
   const filteredCardList = useExecuteCardListFilter();
+  const selectedDeckId = useSelector(deckStoreSelectors.selectedDeckId);
+
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ['20%', '50%', '95%'], []);
+
+  useEffect(() => {
+    selectedDeckId
+      ? bottomSheetRef.current?.expand()
+      : bottomSheetRef.current?.close();
+  }, [selectedDeckId, bottomSheetRef]);
 
   useEffect(() => {
     setOptions({
@@ -192,13 +216,43 @@ export const DeckScreen = () => {
   }, [setOptions, currentTab]);
 
   return (
-    <View>
+    <View flex={1}>
       <View display={currentTab === DeckScreenTab.deck ? 'flex' : 'none'}>
         <DeckList />
       </View>
       <View display={currentTab === DeckScreenTab.cardList ? 'flex' : 'none'}>
         <CardList cardList={filteredCardList} />
       </View>
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        snapPoints={snapPoints}
+        style={styles.bottonSheet}
+      >
+        <View flexDirection="row" px={2}>
+          <Button
+            variant="ghost"
+            colorScheme="blue"
+            onPress={() => {
+              dispatch(deckStoreActions.selectDeck({ deckId: undefined }));
+            }}
+          >
+            閉じる
+          </Button>
+        </View>
+        <Text>Deck Detail</Text>
+      </BottomSheet>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  bottonSheet: {
+    shadowColor: '#000000',
+    shadowOpacity: 0.03,
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+  },
+});
