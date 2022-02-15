@@ -16,10 +16,10 @@ export const DeckDetailSheet = () => {
   const snapPoints = useMemo(() => ['20%', '60%', '95%'], []);
 
   useEffect(() => {
-    selectedDeckId && !isCreateMode
+    selectedDeckId
       ? bottomSheetRef.current?.expand()
       : bottomSheetRef.current?.close();
-  }, [selectedDeckId, isCreateMode, bottomSheetRef]);
+  }, [selectedDeckId, bottomSheetRef]);
 
   return (
     <BottomSheet
