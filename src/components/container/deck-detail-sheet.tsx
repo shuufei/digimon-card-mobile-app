@@ -10,15 +10,16 @@ export const DeckDetailSheet = () => {
   const selectedDeckId = useSelector(
     deckStore.selectors.selectedDeckIdSelector
   );
+  const isCreateMode = useSelector(deckStore.selectors.isCreateModeSelector);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['20%', '60%', '95%'], []);
 
   useEffect(() => {
-    selectedDeckId
+    selectedDeckId && !isCreateMode
       ? bottomSheetRef.current?.expand()
       : bottomSheetRef.current?.close();
-  }, [selectedDeckId, bottomSheetRef]);
+  }, [selectedDeckId, isCreateMode, bottomSheetRef]);
 
   return (
     <BottomSheet

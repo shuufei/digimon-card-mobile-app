@@ -159,6 +159,7 @@ const DeckMenuButton: FC<{ onPress: () => void }> = ({ onPress }) => {
       <Menu.Item
         borderRadius={3}
         onPress={() => {
+          dispatch(deckStore.actions.selectDeck({ deckId: undefined }));
           dispatch(deckStore.actions.setCreateMode({ isCreateMode: true }));
         }}
       >
