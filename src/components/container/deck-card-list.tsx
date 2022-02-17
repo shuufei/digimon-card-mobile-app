@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { CardInfo, cardImageAspectRate } from '../../domains/card';
 import { View, Heading, Text, Divider, HStack, Button } from 'native-base';
-import { Card } from './card';
+import { Card } from '../presentation/card';
 import { Ionicons } from '@expo/vector-icons';
 
 export type CardsGroupedByNo = {
@@ -38,7 +38,7 @@ export const DeckCardList: FC<{
       >
         {Object.values(cardsGroupedByNo).map(({ card, count }) => {
           return (
-            <View key={card.no} paddingBottom={3}>
+            <View key={card.no} paddingBottom={4}>
               <Card
                 card={card}
                 width={100}
@@ -46,9 +46,9 @@ export const DeckCardList: FC<{
                 padding={0}
               />
               <View flexDirection="row" justifyContent="center" marginTop={1}>
-                <Text>{count} / 4</Text>
+                <Text fontSize={12}>{count} / 4</Text>
               </View>
-              <HStack space={1}>
+              <HStack space={1} marginTop={1}>
                 <Button colorScheme="gray" variant="subtle" flex={1}>
                   <Ionicons name="add-sharp" size={12} />
                 </Button>

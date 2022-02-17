@@ -11,7 +11,7 @@ import {
   Lv,
 } from '../../domains/card';
 import * as deckStore from '../../store/deck-store';
-import { DeckCardList } from '../presentation/deck-card-list';
+import { DeckCardList } from './deck-card-list';
 
 type CardsGroupedByNo = {
   [no: string]: {
