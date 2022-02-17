@@ -1,15 +1,22 @@
 import { omit, orderBy } from 'lodash';
-import { View } from 'native-base';
-import React, { FC, useMemo, useRef } from 'react';
+import { Button, View } from 'native-base';
+import React, { FC, useCallback, useMemo, useRef } from 'react';
 import { Dimensions, FlatList, ListRenderItemInfo } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { cardImageAspectRate, CardInfo } from '../../domains/card';
+import * as deckStore from '../../store/deck-store';
+import { useValueRef } from '../hooks/use-value-ref';
 import { Card } from '../presentation/card';
 
 const RenderItem: FC<{
   item: FlatListItemData;
-  AppendToDeckButton: FC<{ card: CardInfo }>;
-}> = ({ item, AppendToDeckButton }) => {
+  isAppendable: boolean;
+}> = React.memo(({ item, isAppendable }) => {
   const card: CardInfo = omit(item, ['width', 'height', 'padding']);
+  const dispatch = useDispatch();
+  const onPressHandler = useCallback(() => {
+    dispatch(deckStore.actions.addCardToDeck({ card }));
+  }, []);
   return (
     <View>
       <Card
@@ -18,7 +25,13 @@ const RenderItem: FC<{
         height={item.height}
         padding={item.padding}
       />
-      <AppendToDeckButton card={card} />
+      {isAppendable && (
+        <View marginTop={0.5} paddingBottom={2} px={2}>
+          <Button colorScheme="gray" variant="outline" onPress={onPressHandler}>
+            追加
+          </Button>
+        </View>
+      )}
       {
         /**
          * NOTE:
@@ -38,7 +51,7 @@ const RenderItem: FC<{
       }
     </View>
   );
-};
+});
 
 type FlatListItemData = CardInfo & {
   width: number;
@@ -48,9 +61,17 @@ type FlatListItemData = CardInfo & {
 
 export const CardList: FC<{
   cardList: CardInfo[];
-  AppendToDeckButton: FC<{ card: CardInfo }>;
-}> = React.memo(({ cardList, AppendToDeckButton }) => {
+}> = React.memo(({ cardList }) => {
   const scrollViewRef = useRef<FlatList>(null);
+
+  const selectedDeckId = useSelector(
+    deckStore.selectors.selectedDeckIdSelector
+  );
+  const selectedDeckIdRef = useValueRef(selectedDeckId);
+  const currentTab = useSelector(deckStore.selectors.currentTabSelector);
+  const isAppendable = useMemo(() => {
+    return currentTab === 'cardList' && !!selectedDeckIdRef.current;
+  }, [selectedDeckIdRef, currentTab]);
 
   /**
    * NOTE:
@@ -83,8 +104,9 @@ export const CardList: FC<{
       <FlatList
         ref={scrollViewRef}
         keyExtractor={(item) => `${item.no}-${item.parallel || 'regular'}`}
-        initialNumToRender={25}
+        // initialNumToRender={25}
         removeClippedSubviews={true}
+        // maxToRenderPerBatch={2000}
         data={orderBy(cardList, ['cardtype', 'lv', 'color']).map((d) => ({
           ...d,
           width: cardWidth,
@@ -92,12 +114,7 @@ export const CardList: FC<{
           padding: gap,
         }))}
         renderItem={(props: ListRenderItemInfo<FlatListItemData>) => {
-          return (
-            <RenderItem
-              item={props.item}
-              AppendToDeckButton={AppendToDeckButton}
-            />
-          );
+          return <RenderItem item={props.item} isAppendable={isAppendable} />;
         }}
         /**
          * FIXME: スクロール時の描画が安定したいないためgetItemLayoutを無効にする

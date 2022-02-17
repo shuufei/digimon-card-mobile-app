@@ -29,6 +29,9 @@ export const DeckList: FC = React.memo(() => {
               borderColor="gray.300"
               borderStyle="solid"
               borderWidth={1}
+              _pressed={{
+                background: 'gray.300',
+              }}
               onPress={() => {
                 dispatch(actions.selectDeck({ deckId: deck.id }));
               }}

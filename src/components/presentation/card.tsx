@@ -27,6 +27,7 @@ export const Card: FC<CardProps> = React.memo(
         <Image
           source={{
             uri: getCardImageSrc(card),
+            cache: 'force-cache',
           }}
           resizeMode="contain"
           height={height}
