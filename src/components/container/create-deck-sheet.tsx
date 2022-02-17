@@ -13,7 +13,7 @@ export const CreateDeckSheet: FC = React.memo(() => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['25%', '70%'], []);
   const isCreateMode = useSelector(deckStore.selectors.isCreateModeSelector);
-  const { control, getValues } = useForm<{ title: string }>();
+  const { control, getValues, setValue } = useForm<{ title: string }>();
 
   useEffect(() => {
     isCreateMode
@@ -77,6 +77,7 @@ export const CreateDeckSheet: FC = React.memo(() => {
               dispatch(
                 deckStore.actions.setCreateMode({ isCreateMode: false })
               );
+              setValue('title', '');
             }}
           >
             キャンセル
@@ -98,6 +99,7 @@ export const CreateDeckSheet: FC = React.memo(() => {
                   }),
                 })
               );
+              setValue('title', '');
             }}
           >
             作成
