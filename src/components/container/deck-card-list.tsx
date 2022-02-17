@@ -57,22 +57,22 @@ export const DeckCardList: FC<{
                   variant="subtle"
                   flex={1}
                   onPress={() => {
-                    dispatch(deckStore.actions.addCardToDeck({ card }));
-                  }}
-                >
-                  <Ionicons name="add-sharp" size={12} />
-                </Button>
-                <Button
-                  colorScheme="gray"
-                  variant="subtle"
-                  flex={1}
-                  onPress={() => {
                     dispatch(
                       deckStore.actions.removeCardToDeck({ cardNo: card.no })
                     );
                   }}
                 >
                   <Ionicons name="remove-sharp" size={12} />
+                </Button>
+                <Button
+                  colorScheme="gray"
+                  variant="subtle"
+                  flex={1}
+                  onPress={() => {
+                    dispatch(deckStore.actions.addCardToDeck({ card }));
+                  }}
+                >
+                  <Ionicons name="add-sharp" size={12} />
                 </Button>
               </HStack>
             </View>
