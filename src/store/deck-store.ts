@@ -1,7 +1,7 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { findLastIndex } from 'lodash';
+import { omit } from 'lodash';
 import { DeckScreenTab } from '../configs/deck-screen-tabs';
-import { CardInfo } from '../domains/card';
+import { CardInfo, CardsGroupedByLvAndCardTypeAndNo } from '../domains/card';
 import { Deck } from '../domains/deck';
 
 export type State = {
@@ -17,6 +17,30 @@ const initialState: State = {
   currentTab: 'deck',
 };
 
+const getCardKey = (card: CardInfo): keyof CardsGroupedByLvAndCardTypeAndNo => {
+  switch (card.cardtype) {
+    case '2_デジモン':
+      switch (card.lv) {
+        case 'Lv.3':
+          return 'Lv.3';
+        case 'Lv.4':
+          return 'Lv.4';
+        case 'Lv.5':
+          return 'Lv.5';
+        case 'Lv.6':
+          return 'Lv.6';
+        case 'Lv.7':
+          return 'Lv.7';
+      }
+    case '1_デジタマ':
+      return 'Lv.2';
+    case '3_テイマー':
+      return '3_テイマー';
+    case '4_オプション':
+      return '4_オプション';
+  }
+};
+
 const deckSlice = createSlice({
   name: 'deck',
   initialState,
@@ -26,6 +50,9 @@ const deckSlice = createSlice({
         ...state,
         ...action.payload.state,
       };
+    },
+    reset: () => {
+      return initialState;
     },
     selectDeck: (
       state,
@@ -55,39 +82,61 @@ const deckSlice = createSlice({
       };
     },
     addCardToDeck: (state, action: PayloadAction<{ card: CardInfo }>) => {
+      const card = action.payload.card;
       return {
         ...state,
         decks: state.decks.map((deck) => {
           if (deck.id !== state.selectedDeckId) {
             return deck;
           }
+          const key = getCardKey(card);
+          const includes = !!deck?.cards[key][card.no];
           return {
             ...deck,
-            cards: [...deck.cards, action.payload.card],
+            cards: {
+              ...deck.cards,
+              [key]: {
+                ...deck.cards[key],
+                [card.no]: includes
+                  ? {
+                      ...deck.cards[key][card.no],
+                      count: deck.cards[key][card.no].count + 1,
+                    }
+                  : {
+                      card: card,
+                      count: 1,
+                    },
+              },
+            },
           };
         }),
       };
     },
-    removeCardToDeck: (
-      state,
-      action: PayloadAction<{ cardNo: CardInfo['no'] }>
-    ) => {
+    removeCardToDeck: (state, action: PayloadAction<{ card: CardInfo }>) => {
+      const card = action.payload.card;
       return {
         ...state,
         decks: state.decks.map((deck) => {
           if (deck.id !== state.selectedDeckId) {
             return deck;
           }
-          const index = findLastIndex(
-            deck.cards,
-            (card) => card.no === action.payload.cardNo
-          );
+          const key = getCardKey(card);
+          const currentCount = deck?.cards[key][card.no]?.count ?? 0;
           return {
             ...deck,
-            cards:
-              index === -1
-                ? deck.cards
-                : deck.cards.filter((_, i) => i !== index),
+            cards: {
+              ...deck.cards,
+              [key]:
+                currentCount <= 1
+                  ? omit(deck.cards[key], card.no)
+                  : {
+                      ...deck.cards[key],
+                      [card.no]: {
+                        ...deck.cards[key][card.no],
+                        count: deck.cards[key][card.no].count - 1,
+                      },
+                    },
+            },
           };
         }),
       };

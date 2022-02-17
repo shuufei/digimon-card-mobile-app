@@ -71,67 +71,15 @@ export const DeckDetailSheet = () => {
       : bottomSheetRef.current?.close();
   }, [selectedDeckId, bottomSheetRef]);
 
-  const cardsGroupedByLvAndCardType: CardsGropedByLvAndCardType = useMemo(
-    () => ({
-      'Lv.2':
-        selectedDeck?.cards.filter(
-          (card) => card.cardtype === '1_デジタマ' && card.lv === 'Lv.2'
-        ) ?? [],
-      'Lv.3':
-        selectedDeck?.cards.filter(
-          (card) => card.cardtype === '2_デジモン' && card.lv === 'Lv.3'
-        ) ?? [],
-      'Lv.4':
-        selectedDeck?.cards.filter(
-          (card) => card.cardtype === '2_デジモン' && card.lv === 'Lv.4'
-        ) ?? [],
-      'Lv.5':
-        selectedDeck?.cards.filter(
-          (card) => card.cardtype === '2_デジモン' && card.lv === 'Lv.5'
-        ) ?? [],
-      'Lv.6':
-        selectedDeck?.cards.filter(
-          (card) => card.cardtype === '2_デジモン' && card.lv === 'Lv.6'
-        ) ?? [],
-      'Lv.7':
-        selectedDeck?.cards.filter(
-          (card) => card.cardtype === '2_デジモン' && card.lv === 'Lv.7'
-        ) ?? [],
-      '-':
-        selectedDeck?.cards.filter(
-          (card) => card.cardtype === '2_デジモン' && card.lv === '-'
-        ) ?? [],
-      '3_テイマー':
-        selectedDeck?.cards.filter((card) => card.cardtype === '3_テイマー') ??
-        [],
-      '4_オプション':
-        selectedDeck?.cards.filter(
-          (card) => card.cardtype === '4_オプション'
-        ) ?? [],
-    }),
-    [selectedDeck]
+  const totalCount = Object.values(selectedDeck?.cards ?? {}).reduce(
+    (acc, curr) => {
+      const count = Object.values(curr).reduce((_acc, _curr) => {
+        return _acc + _curr.count;
+      }, 0);
+      return acc + count;
+    },
+    0
   );
-
-  const cardsGroupedByNo: CardsGroupedByLvAndCardTypeAndNo = useMemo(() => {
-    return {
-      'Lv.2': groupByNo(cardsGroupedByLvAndCardType['Lv.2']),
-      'Lv.3': groupByNo(cardsGroupedByLvAndCardType['Lv.3']),
-      'Lv.4': groupByNo(cardsGroupedByLvAndCardType['Lv.4']),
-      'Lv.5': groupByNo(cardsGroupedByLvAndCardType['Lv.5']),
-      'Lv.6': groupByNo(cardsGroupedByLvAndCardType['Lv.6']),
-      'Lv.7': groupByNo(cardsGroupedByLvAndCardType['Lv.7']),
-      '-': groupByNo(cardsGroupedByLvAndCardType['-']),
-      '3_テイマー': groupByNo(cardsGroupedByLvAndCardType['3_テイマー']),
-      '4_オプション': groupByNo(cardsGroupedByLvAndCardType['4_オプション']),
-    };
-  }, [cardsGroupedByLvAndCardType]);
-
-  const totalCount = Object.values(cardsGroupedByNo).reduce((acc, curr) => {
-    const count = Object.values(curr).reduce((_acc, _curr) => {
-      return _acc + _curr.count;
-    }, 0);
-    return acc + count;
-  }, 0);
 
   return (
     <BottomSheet
@@ -160,7 +108,7 @@ export const DeckDetailSheet = () => {
             <Text>{totalCount} / 55</Text>
           </HStack>
           <View marginTop={3}>
-            {Object.entries(cardsGroupedByNo).map(([key, value]) => {
+            {Object.entries(selectedDeck?.cards ?? {}).map(([key, value]) => {
               const displayCardType = convertToDisplayCardTypeFromCardType(
                 key as CardType
               );

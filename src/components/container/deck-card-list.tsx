@@ -5,6 +5,7 @@ import { Card } from '../presentation/card';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import * as deckStore from '../../store/deck-store';
+import React from 'react';
 
 export type CardsGroupedByNo = {
   [no: string]: {
@@ -16,7 +17,7 @@ export type CardsGroupedByNo = {
 export const DeckCardList: FC<{
   title: string;
   cardsGroupedByNo: CardsGroupedByNo;
-}> = ({ title, cardsGroupedByNo }) => {
+}> = React.memo(({ title, cardsGroupedByNo }) => {
   const dispatch = useDispatch();
   const totalCount = Object.values(cardsGroupedByNo).reduce((acc, curr) => {
     return acc + curr.count;
@@ -57,9 +58,7 @@ export const DeckCardList: FC<{
                   variant="subtle"
                   flex={1}
                   onPress={() => {
-                    dispatch(
-                      deckStore.actions.removeCardToDeck({ cardNo: card.no })
-                    );
+                    dispatch(deckStore.actions.removeCardToDeck({ card }));
                   }}
                 >
                   <Ionicons name="remove-sharp" size={12} />
@@ -81,4 +80,4 @@ export const DeckCardList: FC<{
       </HStack>
     </View>
   );
-};
+});

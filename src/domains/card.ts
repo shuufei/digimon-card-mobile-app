@@ -227,3 +227,27 @@ export const categoryList: Category[] = Object.entries(CATEGORY).map(
 );
 
 export const cardImageAspectRate = 1.395;
+
+export type CardsGroupedByNo = {
+  // TODO: noではなくimageFileNameをkeyにする
+  [no: string]: {
+    card: CardInfo;
+    count: number;
+  };
+};
+
+export type CardsGropedByLvAndCardType = {
+  'Lv.2': CardInfo[];
+  'Lv.3': CardInfo[];
+  'Lv.4': CardInfo[];
+  'Lv.5': CardInfo[];
+  'Lv.6': CardInfo[];
+  'Lv.7': CardInfo[];
+  '-': CardInfo[];
+  '3_テイマー': CardInfo[];
+  '4_オプション': CardInfo[];
+};
+
+export type CardsGroupedByLvAndCardTypeAndNo = {
+  [key in keyof CardsGropedByLvAndCardType]: CardsGroupedByNo;
+};

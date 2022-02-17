@@ -1,4 +1,4 @@
-import { Pressable, Text, View, VStack } from 'native-base';
+import { Pressable, Text, View, VStack, Button } from 'native-base';
 import { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, selectors } from '../../store/deck-store';
@@ -10,6 +10,15 @@ export const DeckList: FC = () => {
   return (
     <View>
       <Text>deck list: {decks.length}</Text>
+      <View p={3}>
+        <Button
+          onPress={() => {
+            dispatch(actions.reset());
+          }}
+        >
+          reset
+        </Button>
+      </View>
       <VStack p={4} space={3}>
         {decks.map((deck) => {
           return (
