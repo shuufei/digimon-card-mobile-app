@@ -1,8 +1,10 @@
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Button, Heading, Input, View } from 'native-base';
 import { FC, useEffect, useMemo, useRef } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { Keyboard, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { createDeck } from '../../domains/deck';
 import * as deckStore from '../../store/deck-store';
 
 export const CreateDeckSheet: FC = () => {
@@ -10,8 +12,8 @@ export const CreateDeckSheet: FC = () => {
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['25%', '70%'], []);
-
   const isCreateMode = useSelector(deckStore.selectors.isCreateModeSelector);
+  const { control, getValues } = useForm<{ title: string }>();
 
   useEffect(() => {
     isCreateMode
@@ -47,13 +49,24 @@ export const CreateDeckSheet: FC = () => {
     >
       <View px={4}>
         <Heading fontSize={14}>新しいデッキを作成</Heading>
-        <Input
-          w="100%"
-          placeholder="デッキ名を入力"
-          fontSize={16}
-          fontWeight="semibold"
-          _focus={{ borderColor: 'gray.500' }}
-          mt={2}
+        <Controller
+          control={control}
+          render={({ field }) => {
+            return (
+              <Input
+                w="100%"
+                placeholder="デッキ名を入力"
+                fontSize={16}
+                fontWeight="semibold"
+                _focus={{ borderColor: 'gray.500' }}
+                mt={2}
+                value={field.value}
+                onChangeText={(value) => field.onChange(value)}
+              />
+            );
+          }}
+          name="title"
+          defaultValue=""
         />
         <View flexDirection="row" justifyContent="flex-end" mt={3}>
           <Button
@@ -68,7 +81,25 @@ export const CreateDeckSheet: FC = () => {
           >
             キャンセル
           </Button>
-          <Button colorScheme="blue" px={6} ml={2}>
+          <Button
+            colorScheme="blue"
+            px={6}
+            ml={2}
+            onPress={() => {
+              Keyboard.dismiss();
+              dispatch(
+                deckStore.actions.setCreateMode({ isCreateMode: false })
+              );
+              const title = getValues('title');
+              dispatch(
+                deckStore.actions.addDeck({
+                  deck: createDeck({
+                    title,
+                  }),
+                })
+              );
+            }}
+          >
             作成
           </Button>
         </View>

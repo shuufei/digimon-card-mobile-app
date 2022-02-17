@@ -10,7 +10,7 @@ export const DeckDetailSheet = () => {
   const selectedDeckId = useSelector(
     deckStore.selectors.selectedDeckIdSelector
   );
-  const isCreateMode = useSelector(deckStore.selectors.isCreateModeSelector);
+  const selectedDeck = useSelector(deckStore.selectors.selectedDeckSelector);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['20%', '60%', '95%'], []);
@@ -39,7 +39,9 @@ export const DeckDetailSheet = () => {
           閉じる
         </Button>
       </View>
-      <Text>Deck Detail</Text>
+      <Text>
+        {selectedDeck?.id}: {selectedDeck?.title}
+      </Text>
     </BottomSheet>
   );
 };
