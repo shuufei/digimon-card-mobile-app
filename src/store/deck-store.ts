@@ -1,15 +1,18 @@
 import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
+import { DeckScreenTab } from '../configs/deck-screen-tabs';
 import { Deck } from '../domains/deck';
 
 export type State = {
   selectedDeckId?: string;
   isCreateMode: boolean;
   decks: Deck[];
+  currentTab?: DeckScreenTab;
 };
 
 const initialState: State = {
   isCreateMode: false,
   decks: [],
+  currentTab: 'deck',
 };
 
 const deckSlice = createSlice({
@@ -43,6 +46,12 @@ const deckSlice = createSlice({
         decks: [...state.decks, action.payload.deck],
       };
     },
+    setTab: (state, action: PayloadAction<{ tab: DeckScreenTab }>) => {
+      return {
+        ...state,
+        currentTab: action.payload.tab,
+      };
+    },
   },
 });
 
@@ -65,10 +74,15 @@ const decksSelector = createSelector(selectSelf, (state) => state.decks);
 const selectedDeckSelector = createSelector(selectSelf, (state) => {
   return state.decks.find((deck) => deck.id === state.selectedDeckId);
 });
+const currentTabSelector = createSelector(
+  selectSelf,
+  (state) => state.currentTab
+);
 export const selectors = {
   selectSelf,
   selectedDeckIdSelector,
   isCreateModeSelector,
   decksSelector,
   selectedDeckSelector,
+  currentTabSelector,
 };

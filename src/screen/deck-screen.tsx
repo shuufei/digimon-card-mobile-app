@@ -2,8 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SegmentControl from '@react-native-segmented-control/segmented-control';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { Button, Menu, View, Text } from 'native-base';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { Button, Menu, Text, View } from 'native-base';
+import { FC, useEffect, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardList } from '../components/container/card-list';
@@ -11,6 +11,7 @@ import { DeckList } from '../components/container/deck-list';
 import { DeckScreenSheet } from '../components/container/deck-screen-sheet';
 import { useValueRef } from '../components/hooks/use-value-ref';
 import { ALL_CARD_LIST } from '../configs/all-card-list';
+import { DECK_SCREEN_TAB } from '../configs/deck-screen-tabs';
 import { storageKeys } from '../configs/storage';
 import { Category } from '../domains/card';
 import { Deck } from '../domains/deck';
@@ -139,11 +140,6 @@ const useExecuteCardListFilter = () => {
   return filteredCardList;
 };
 
-const DeckScreenTab = {
-  deck: 0,
-  cardList: 1,
-} as const;
-
 const CardListFilterButton: FC<{ onPress: () => void }> = ({ onPress }) => {
   return (
     <Button
@@ -208,10 +204,10 @@ export const DeckScreen = () => {
 
   const { navigate, setOptions } =
     useNavigation<NavigationProp<RootParamList>>();
+  const dispatch = useDispatch();
 
-  const [currentTab, setTab] = useState<number>(DeckScreenTab.deck);
   const filteredCardList = useExecuteCardListFilter();
-
+  const currentTab = useSelector(deckStore.selectors.currentTabSelector);
   const decks = useSelector(deckStore.selectors.decksSelector);
   useEffect(() => {
     const saveDecks = async () => {
@@ -228,12 +224,20 @@ export const DeckScreen = () => {
         return (
           <SegmentControl
             values={tabTitles}
-            selectedIndex={DeckScreenTab.deck}
+            selectedIndex={DECK_SCREEN_TAB.deck}
             style={{
               width: 200,
             }}
             onValueChange={(value) => {
-              setTab(tabTitles.findIndex((title) => title === value) ?? 0);
+              dispatch(
+                deckStore.actions.setTab({
+                  tab:
+                    (tabTitles.findIndex((title) => title === value) ?? 0) ===
+                    DECK_SCREEN_TAB.deck
+                      ? 'deck'
+                      : 'cardList',
+                })
+              );
             }}
           />
         );
@@ -241,7 +245,7 @@ export const DeckScreen = () => {
       headerRight: () => {
         return (
           <View paddingRight={2}>
-            {currentTab === DeckScreenTab.deck ? (
+            {currentTab === 'deck' ? (
               <DeckMenuButton onPress={() => {}} />
             ) : (
               <CardListFilterButton
@@ -258,10 +262,10 @@ export const DeckScreen = () => {
 
   return (
     <View flex={1}>
-      <View display={currentTab === DeckScreenTab.deck ? 'flex' : 'none'}>
+      <View display={currentTab === 'deck' ? 'flex' : 'none'}>
         <DeckList />
       </View>
-      <View display={currentTab === DeckScreenTab.cardList ? 'flex' : 'none'}>
+      <View display={currentTab === 'cardList' ? 'flex' : 'none'}>
         <CardList cardList={filteredCardList} />
       </View>
       <DeckScreenSheet />
