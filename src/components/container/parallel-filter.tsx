@@ -1,10 +1,10 @@
-import { View, Text, Switch } from 'native-base';
-import { FC, useState, useCallback } from 'react';
+import { Switch, Text, View } from 'native-base';
+import React, { FC, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { actions, selectors } from '../../store/card-list-filter-store';
 import { FilterItem } from '../presentation/filter-item';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectors, actions } from '../../store/card-list-filter-store';
 
-export const ParallelFilter: FC = () => {
+export const ParallelFilter: FC = React.memo(() => {
   const dispatch = useDispatch();
   const includesParallel = useSelector(selectors.includesParallelSelector);
 
@@ -37,4 +37,4 @@ export const ParallelFilter: FC = () => {
       </FilterItem>
     </View>
   );
-};
+});

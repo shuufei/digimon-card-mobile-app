@@ -1,10 +1,9 @@
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Button, Heading, HStack, ScrollView, Text, View } from 'native-base';
-import { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  CardInfo,
   CardType,
   convertToDisplayCardTypeFromCardType,
   convertToDisplayDigimonLvFromDigimonLv,
@@ -13,49 +12,7 @@ import {
 import * as deckStore from '../../store/deck-store';
 import { DeckCardList } from './deck-card-list';
 
-type CardsGroupedByNo = {
-  [no: string]: {
-    card: CardInfo;
-    count: number;
-  };
-};
-
-type CardsGropedByLvAndCardType = {
-  'Lv.2': CardInfo[];
-  'Lv.3': CardInfo[];
-  'Lv.4': CardInfo[];
-  'Lv.5': CardInfo[];
-  'Lv.6': CardInfo[];
-  'Lv.7': CardInfo[];
-  '-': CardInfo[];
-  '3_テイマー': CardInfo[];
-  '4_オプション': CardInfo[];
-};
-
-type CardsGroupedByLvAndCardTypeAndNo = {
-  [key in keyof CardsGropedByLvAndCardType]: CardsGroupedByNo;
-};
-
-const groupByNo = (cards: CardInfo[]): CardsGroupedByNo => {
-  return cards.reduce((acc, current) => {
-    const includes = acc[current.no];
-    const card: CardsGroupedByNo['card'] = includes
-      ? {
-          ...acc[current.no],
-          count: acc[current.no].count + 1,
-        }
-      : {
-          card: current,
-          count: 1,
-        };
-    return {
-      ...acc,
-      [current.no]: card,
-    };
-  }, {} as CardsGroupedByNo);
-};
-
-export const DeckDetailSheet = () => {
+export const DeckDetailSheet = React.memo(() => {
   const dispatch = useDispatch();
   const selectedDeckId = useSelector(
     deckStore.selectors.selectedDeckIdSelector
@@ -130,7 +87,7 @@ export const DeckDetailSheet = () => {
       </ScrollView>
     </BottomSheet>
   );
-};
+});
 const styles = StyleSheet.create({
   bottonSheet: {
     shadowColor: '#000000',

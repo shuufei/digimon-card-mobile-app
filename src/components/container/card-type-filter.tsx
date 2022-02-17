@@ -1,6 +1,6 @@
 import { last } from 'lodash';
 import { Text, View } from 'native-base';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CardType,
@@ -10,7 +10,7 @@ import {
 import { actions, selectors } from '../../store/card-list-filter-store';
 import { FilterCheckItem } from '../presentation/filter-check-item';
 
-export const CardTypeFilter = () => {
+export const CardTypeFilter = React.memo(() => {
   const dispatch = useDispatch();
   const filteredCardTypes = useSelector(selectors.cardTypesSelector);
 
@@ -58,4 +58,4 @@ export const CardTypeFilter = () => {
       </View>
     </View>
   );
-};
+});

@@ -1,16 +1,16 @@
 import { last } from 'lodash';
 import { Text, View } from 'native-base';
-import { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   convertToDisplayDigimonLvFromDigimonLv,
   Lv,
   lvList,
 } from '../../domains/card';
+import { actions, selectors } from '../../store/card-list-filter-store';
 import { FilterCheckItem } from '../presentation/filter-check-item';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectors, actions } from '../../store/card-list-filter-store';
 
-export const DigimonLevelFilter = () => {
+export const DigimonLevelFilter = React.memo(() => {
   const dispatch = useDispatch();
   const filteredLv = useSelector(selectors.lvListSelector);
 
@@ -55,4 +55,4 @@ export const DigimonLevelFilter = () => {
       </View>
     </View>
   );
-};
+});

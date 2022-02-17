@@ -1,16 +1,16 @@
 import { last } from 'lodash';
 import { Text, View } from 'native-base';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Category,
   categoryList,
   convertToDisplayCategoryFromCategory,
 } from '../../domains/card';
-import { selectors, actions } from '../../store/card-list-filter-store';
+import { actions, selectors } from '../../store/card-list-filter-store';
 import { FilterCheckItem } from '../presentation/filter-check-item';
 
-export const CategoryFilter = () => {
+export const CategoryFilter = React.memo(() => {
   const dispatch = useDispatch();
   const filteredCategories = useSelector(selectors.categoriesSelector);
   const setFilteredCategories = useCallback((categories: Category[]) => {
@@ -54,4 +54,4 @@ export const CategoryFilter = () => {
       </View>
     </View>
   );
-};
+});

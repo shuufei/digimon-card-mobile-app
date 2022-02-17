@@ -1,9 +1,9 @@
-import { Pressable, Text, View, VStack, Button } from 'native-base';
-import { FC } from 'react';
+import { Button, Pressable, Text, View, VStack } from 'native-base';
+import React, { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, selectors } from '../../store/deck-store';
 
-export const DeckList: FC = () => {
+export const DeckList: FC = React.memo(() => {
   const dispatch = useDispatch();
   const decks = useSelector(selectors.decksSelector);
 
@@ -42,4 +42,4 @@ export const DeckList: FC = () => {
       </VStack>
     </View>
   );
-};
+});

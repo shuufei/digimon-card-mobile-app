@@ -1,6 +1,6 @@
 import { last } from 'lodash';
 import { Text, View } from 'native-base';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Color,
@@ -32,7 +32,7 @@ export const convertToBorderColorCodeFromColor = (color: Color): string => {
   }
 };
 
-export const ColorFilter = () => {
+export const ColorFilter = React.memo(() => {
   const dispatch = useDispatch();
   const filteredColors = useSelector(selectors.colorsSelector);
 
@@ -94,4 +94,4 @@ export const ColorFilter = () => {
       </View>
     </View>
   );
-};
+});

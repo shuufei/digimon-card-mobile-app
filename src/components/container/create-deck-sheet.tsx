@@ -1,13 +1,13 @@
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Button, Heading, Input, View } from 'native-base';
-import { FC, useEffect, useMemo, useRef } from 'react';
+import React, { FC, useEffect, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Keyboard, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { createDeck } from '../../domains/deck';
 import * as deckStore from '../../store/deck-store';
 
-export const CreateDeckSheet: FC = () => {
+export const CreateDeckSheet: FC = React.memo(() => {
   const dispatch = useDispatch();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -106,7 +106,7 @@ export const CreateDeckSheet: FC = () => {
       </View>
     </BottomSheet>
   );
-};
+});
 
 const styles = StyleSheet.create({
   bottonSheet: {
