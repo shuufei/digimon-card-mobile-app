@@ -1,5 +1,5 @@
 import { Button, View } from 'native-base';
-import React, { FC, useCallback, useEffect, useMemo } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardInfo } from '../../domains/card';
 import * as deckStore from '../../store/deck-store';
