@@ -1,8 +1,18 @@
+import { Ionicons } from '@expo/vector-icons';
 import BottomSheet from '@gorhom/bottom-sheet';
-import { Button, Heading, HStack, ScrollView, Text, View } from 'native-base';
+import {
+  Button,
+  Heading,
+  HStack,
+  Menu,
+  ScrollView,
+  Text,
+  View,
+} from 'native-base';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { primaryColorCode } from '../../configs/styles';
 import {
   CardType,
   convertToDisplayCardTypeFromCardType,
@@ -10,6 +20,7 @@ import {
   Lv,
 } from '../../domains/card';
 import * as deckStore from '../../store/deck-store';
+import { MenuItem } from '../presentation/menu-item';
 import { DeckCardList } from './deck-card-list';
 
 export const DeckDetailSheet = React.memo(() => {
@@ -45,7 +56,7 @@ export const DeckDetailSheet = React.memo(() => {
       snapPoints={snapPoints}
       style={styles.bottonSheet}
     >
-      <View flexDirection="row" px={2}>
+      <View flexDirection="row" px={2} justifyContent="space-between">
         <Button
           variant="ghost"
           colorScheme="blue"
@@ -55,6 +66,51 @@ export const DeckDetailSheet = React.memo(() => {
         >
           閉じる
         </Button>
+        <Menu
+          trigger={(triggerProps) => {
+            return (
+              <Button
+                size="xs"
+                variant="ghost"
+                _pressed={{
+                  background: '#f0f0f0',
+                }}
+                onPress={() => {}}
+                colorScheme="blue"
+                {...triggerProps}
+              >
+                <Ionicons
+                  name="ellipsis-horizontal-circle-outline"
+                  size={24}
+                  color={primaryColorCode}
+                />
+              </Button>
+            );
+          }}
+          width="160"
+          backgroundColor="white"
+          px={2}
+          mr={4}
+        >
+          <MenuItem label="タイトル変更" />
+          <MenuItem label="複製" />
+          <MenuItem label="共有" />
+          <MenuItem label="対戦" />
+          <MenuItem label="キーカードを選択" />
+          <MenuItem
+            label="削除"
+            color="red.500"
+            onPress={() => {
+              if (selectedDeck == null) {
+                return;
+              }
+              dispatch(
+                deckStore.actions.deleteDeck({ deckId: selectedDeck.id })
+              );
+              dispatch(deckStore.actions.selectDeck({ deckId: undefined }));
+            }}
+          />
+        </Menu>
       </View>
       <ScrollView marginTop={2}>
         <View px={4} paddingBottom={20}>

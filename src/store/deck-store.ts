@@ -141,6 +141,12 @@ const deckSlice = createSlice({
         }),
       };
     },
+    deleteDeck: (state, action: PayloadAction<{ deckId: Deck['id'] }>) => {
+      return {
+        ...state,
+        decks: state.decks.filter((deck) => deck.id !== action.payload.deckId),
+      };
+    },
   },
 });
 
