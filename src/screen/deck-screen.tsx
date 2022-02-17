@@ -13,6 +13,7 @@ import { useValueRef } from '../components/hooks/use-value-ref';
 import { ALL_CARD_LIST } from '../configs/all-card-list';
 import { storageKeys } from '../configs/storage';
 import { Category } from '../domains/card';
+import { Deck } from '../domains/deck';
 import { RootParamList } from '../navigation';
 import {
   actions as cardListFilterStoreActions,
@@ -38,9 +39,35 @@ const useInitStore = () => {
         filterSettings &&
           dispatch(cardListFilterStoreActions.set({ state: filterSettings }));
         dispatch(cardListFilterStoreActions.executeFilter());
-      } catch (error) {}
+      } catch (error) {
+        console.error('Init Store Error: card list filter store: ', error);
+      }
     };
     dispatchInitCardListFilterStore();
+  }, [dispatch]);
+
+  /**
+   * deck store
+   */
+  useEffect(() => {
+    const dispatchInitDeckStore = async () => {
+      try {
+        const value = await AsyncStorage.getItem(storageKeys.decks);
+        const decks = value && (JSON.parse(value) as Deck[]);
+        decks &&
+          dispatch(
+            deckStore.actions.set({
+              state: {
+                decks,
+                isCreateMode: false,
+              },
+            })
+          );
+      } catch (error) {
+        console.error('Init Store Error: deck store: ', error);
+      }
+    };
+    dispatchInitDeckStore();
   }, [dispatch]);
 };
 
@@ -184,6 +211,14 @@ export const DeckScreen = () => {
 
   const [currentTab, setTab] = useState<number>(DeckScreenTab.deck);
   const filteredCardList = useExecuteCardListFilter();
+
+  const decks = useSelector(deckStore.selectors.decksSelector);
+  useEffect(() => {
+    const saveDecks = async () => {
+      await AsyncStorage.setItem(storageKeys.decks, JSON.stringify(decks));
+    };
+    saveDecks();
+  }, [decks]);
 
   useEffect(() => {
     setOptions({

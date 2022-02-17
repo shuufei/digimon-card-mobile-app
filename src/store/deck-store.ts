@@ -16,6 +16,12 @@ const deckSlice = createSlice({
   name: 'deck',
   initialState,
   reducers: {
+    set: (state, action: PayloadAction<{ state: State }>) => {
+      return {
+        ...state,
+        ...action.payload.state,
+      };
+    },
     selectDeck: (
       state,
       action: PayloadAction<{ deckId: State['selectedDeckId'] }>
