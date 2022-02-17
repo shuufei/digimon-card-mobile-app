@@ -1,7 +1,8 @@
-import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { findLastIndex } from 'lodash';
 import { DeckScreenTab } from '../configs/deck-screen-tabs';
-import { Deck } from '../domains/deck';
 import { CardInfo } from '../domains/card';
+import { Deck } from '../domains/deck';
 
 export type State = {
   selectedDeckId?: string;
@@ -63,6 +64,30 @@ const deckSlice = createSlice({
           return {
             ...deck,
             cards: [...deck.cards, action.payload.card],
+          };
+        }),
+      };
+    },
+    removeCardToDeck: (
+      state,
+      action: PayloadAction<{ cardNo: CardInfo['no'] }>
+    ) => {
+      return {
+        ...state,
+        decks: state.decks.map((deck) => {
+          if (deck.id !== state.selectedDeckId) {
+            return deck;
+          }
+          const index = findLastIndex(
+            deck.cards,
+            (card) => card.no === action.payload.cardNo
+          );
+          return {
+            ...deck,
+            cards:
+              index === -1
+                ? deck.cards
+                : deck.cards.filter((_, i) => i !== index),
           };
         }),
       };

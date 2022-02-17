@@ -3,6 +3,8 @@ import { CardInfo, cardImageAspectRate } from '../../domains/card';
 import { View, Heading, Text, Divider, HStack, Button } from 'native-base';
 import { Card } from '../presentation/card';
 import { Ionicons } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
+import * as deckStore from '../../store/deck-store';
 
 export type CardsGroupedByNo = {
   [no: string]: {
@@ -15,6 +17,7 @@ export const DeckCardList: FC<{
   title: string;
   cardsGroupedByNo: CardsGroupedByNo;
 }> = ({ title, cardsGroupedByNo }) => {
+  const dispatch = useDispatch();
   const totalCount = Object.values(cardsGroupedByNo).reduce((acc, curr) => {
     return acc + curr.count;
   }, 0);
@@ -49,10 +52,26 @@ export const DeckCardList: FC<{
                 <Text fontSize={12}>{count} / 4</Text>
               </View>
               <HStack space={1} marginTop={1}>
-                <Button colorScheme="gray" variant="subtle" flex={1}>
+                <Button
+                  colorScheme="gray"
+                  variant="subtle"
+                  flex={1}
+                  onPress={() => {
+                    dispatch(deckStore.actions.addCardToDeck({ card }));
+                  }}
+                >
                   <Ionicons name="add-sharp" size={12} />
                 </Button>
-                <Button colorScheme="gray" variant="subtle" flex={1}>
+                <Button
+                  colorScheme="gray"
+                  variant="subtle"
+                  flex={1}
+                  onPress={() => {
+                    dispatch(
+                      deckStore.actions.removeCardToDeck({ cardNo: card.no })
+                    );
+                  }}
+                >
                   <Ionicons name="remove-sharp" size={12} />
                 </Button>
               </HStack>
