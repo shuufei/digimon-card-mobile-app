@@ -90,17 +90,17 @@ const deckSlice = createSlice({
             return deck;
           }
           const key = getCardKey(card);
-          const includes = !!deck?.cards[key][card.no];
+          const includes = !!deck?.cards[key][card.imgFileName];
           return {
             ...deck,
             cards: {
               ...deck.cards,
               [key]: {
                 ...deck.cards[key],
-                [card.no]: includes
+                [card.imgFileName]: includes
                   ? {
-                      ...deck.cards[key][card.no],
-                      count: deck.cards[key][card.no].count + 1,
+                      ...deck.cards[key][card.imgFileName],
+                      count: deck.cards[key][card.imgFileName].count + 1,
                     }
                   : {
                       card: card,
@@ -121,19 +121,19 @@ const deckSlice = createSlice({
             return deck;
           }
           const key = getCardKey(card);
-          const currentCount = deck?.cards[key][card.no]?.count ?? 0;
+          const currentCount = deck?.cards[key][card.imgFileName]?.count ?? 0;
           return {
             ...deck,
             cards: {
               ...deck.cards,
               [key]:
                 currentCount <= 1
-                  ? omit(deck.cards[key], card.no)
+                  ? omit(deck.cards[key], card.imgFileName)
                   : {
                       ...deck.cards[key],
-                      [card.no]: {
-                        ...deck.cards[key][card.no],
-                        count: deck.cards[key][card.no].count - 1,
+                      [card.imgFileName]: {
+                        ...deck.cards[key][card.imgFileName],
+                        count: deck.cards[key][card.imgFileName].count - 1,
                       },
                     },
             },

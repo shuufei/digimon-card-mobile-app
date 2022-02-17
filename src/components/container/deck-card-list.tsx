@@ -42,7 +42,7 @@ export const DeckCardList: FC<{
       >
         {Object.values(cardsGroupedByNo).map(({ card, count }) => {
           return (
-            <View key={card.no} paddingBottom={4}>
+            <View key={card.imgFileName} paddingBottom={4}>
               <Card
                 card={card}
                 width={100}

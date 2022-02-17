@@ -229,8 +229,7 @@ export const categoryList: Category[] = Object.entries(CATEGORY).map(
 export const cardImageAspectRate = 1.395;
 
 export type CardsGroupedByNo = {
-  // TODO: noではなくimageFileNameをkeyにする
-  [no: string]: {
+  [imageFileName: string]: {
     card: CardInfo;
     count: number;
   };
