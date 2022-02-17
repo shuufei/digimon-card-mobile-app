@@ -1,9 +1,11 @@
 import BottomSheet from '@gorhom/bottom-sheet';
-import { Button, Text, View } from 'native-base';
+import { Button, Heading, ScrollView, View } from 'native-base';
 import { useEffect, useMemo, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { cardImageAspectRate } from '../../domains/card';
 import * as deckStore from '../../store/deck-store';
+import { Card } from '../presentation/card';
 
 export const DeckDetailSheet = () => {
   const dispatch = useDispatch();
@@ -39,9 +41,27 @@ export const DeckDetailSheet = () => {
           閉じる
         </Button>
       </View>
-      <Text>
-        {selectedDeck?.id}: {selectedDeck?.title}
-      </Text>
+      <ScrollView>
+        <View px={4} paddingBottom={20}>
+          <Heading fontSize={14} fontWeight="semibold">
+            {selectedDeck?.title}
+          </Heading>
+          <View flexDirection="row" flexWrap="wrap">
+            {selectedDeck?.cards?.map((card, i) => {
+              return (
+                <View key={i}>
+                  <Card
+                    card={card}
+                    width={90}
+                    height={90 * cardImageAspectRate}
+                    padding={0}
+                  />
+                </View>
+              );
+            })}
+          </View>
+        </View>
+      </ScrollView>
     </BottomSheet>
   );
 };

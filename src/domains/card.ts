@@ -225,3 +225,5 @@ export const lvList: Lv[] = Object.entries(LV).map((v) => v[0] as Lv);
 export const categoryList: Category[] = Object.entries(CATEGORY).map(
   (v) => v[0] as Category
 );
+
+export const cardImageAspectRate = 1.395;

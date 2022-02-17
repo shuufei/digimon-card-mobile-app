@@ -9,7 +9,7 @@ export type CardProps = {
   card: CardInfo;
   height: number;
   width: number;
-  padding: number;
+  padding?: number;
 };
 
 export const Card: FC<CardProps> = ({ card, height, width, padding }) => {

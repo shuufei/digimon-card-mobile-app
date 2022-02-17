@@ -1,34 +1,24 @@
 import { omit, orderBy } from 'lodash';
-import { Button, View } from 'native-base';
+import { View } from 'native-base';
 import React, { FC, useMemo, useRef } from 'react';
 import { Dimensions, FlatList, ListRenderItemInfo } from 'react-native';
-import { useSelector } from 'react-redux';
-import { CardInfo } from '../../domains/card';
-import * as deckStore from '../../store/deck-store';
-import { useValueRef } from '../hooks/use-value-ref';
+import { cardImageAspectRate, CardInfo } from '../../domains/card';
 import { Card } from '../presentation/card';
 
-const RenderItem = ({ item }: ListRenderItemInfo<FlatListItemData>) => {
-  const selectedDeckRef = useValueRef(
-    useSelector(deckStore.selectors.selectedDeckSelector)
-  );
-  const currentTab = useSelector(deckStore.selectors.currentTabSelector);
-  const isAppendableCard = useMemo(() => {
-    return currentTab === 'cardList' && !!selectedDeckRef.current;
-  }, [selectedDeckRef, currentTab]);
+const RenderItem: FC<{
+  item: FlatListItemData;
+  AppendToDeckButton: FC<{ card: CardInfo }>;
+}> = ({ item, AppendToDeckButton }) => {
+  const card: CardInfo = omit(item, ['width', 'height', 'padding']);
   return (
     <View>
       <Card
-        card={omit(item, ['width', 'height', 'padding'])}
+        card={card}
         width={item.width}
         height={item.height}
         padding={item.padding}
       />
-      {!!isAppendableCard && (
-        <View marginTop={0.5} paddingBottom={2} px={2}>
-          <Button>追加</Button>
-        </View>
-      )}
+      <AppendToDeckButton card={card} />
       {
         /**
          * NOTE:
@@ -58,7 +48,8 @@ type FlatListItemData = CardInfo & {
 
 export const CardList: FC<{
   cardList: CardInfo[];
-}> = React.memo(({ cardList }) => {
+  AppendToDeckButton: FC<{ card: CardInfo }>;
+}> = React.memo(({ cardList, AppendToDeckButton }) => {
   const scrollViewRef = useRef<FlatList>(null);
 
   /**
@@ -76,7 +67,7 @@ export const CardList: FC<{
     const nativeBaseSizeKey = 4; // NOTE: native baseのスペースの基準値
     const totalSpace = gap * nativeBaseSizeKey * (columns * 2);
     const cardWidth = (windowWidth - totalSpace) / 4;
-    const cardHeight = cardWidth * 1.395;
+    const cardHeight = cardWidth * cardImageAspectRate;
     return {
       cardWidth,
       cardHeight,
@@ -101,7 +92,12 @@ export const CardList: FC<{
           padding: gap,
         }))}
         renderItem={(props: ListRenderItemInfo<FlatListItemData>) => {
-          return <RenderItem {...props} />;
+          return (
+            <RenderItem
+              item={props.item}
+              AppendToDeckButton={AppendToDeckButton}
+            />
+          );
         }}
         /**
          * FIXME: スクロール時の描画が安定したいないためgetItemLayoutを無効にする
@@ -112,7 +108,7 @@ export const CardList: FC<{
         //   index,
         // })}
         numColumns={columns}
-        contentContainerStyle={{ paddingTop: 10, paddingBottom: 50 }}
+        contentContainerStyle={{ paddingTop: 10, paddingBottom: 200 }}
       />
     </View>
   );

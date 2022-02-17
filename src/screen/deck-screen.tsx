@@ -6,6 +6,7 @@ import { Button, Menu, Text, View } from 'native-base';
 import { FC, useEffect, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { AppendToDeckButton } from '../components/container/append-to-deck-button';
 import { CardList } from '../components/container/card-list';
 import { DeckList } from '../components/container/deck-list';
 import { DeckScreenSheet } from '../components/container/deck-screen-sheet';
@@ -266,7 +267,10 @@ export const DeckScreen = () => {
         <DeckList />
       </View>
       <View display={currentTab === 'cardList' ? 'flex' : 'none'}>
-        <CardList cardList={filteredCardList} />
+        <CardList
+          cardList={filteredCardList}
+          AppendToDeckButton={AppendToDeckButton}
+        />
       </View>
       <DeckScreenSheet />
     </View>

@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
 import { DeckScreenTab } from '../configs/deck-screen-tabs';
 import { Deck } from '../domains/deck';
+import { CardInfo } from '../domains/card';
 
 export type State = {
   selectedDeckId?: string;
@@ -50,6 +51,20 @@ const deckSlice = createSlice({
       return {
         ...state,
         currentTab: action.payload.tab,
+      };
+    },
+    addCardToDeck: (state, action: PayloadAction<{ card: CardInfo }>) => {
+      return {
+        ...state,
+        decks: state.decks.map((deck) => {
+          if (deck.id !== state.selectedDeckId) {
+            return deck;
+          }
+          return {
+            ...deck,
+            cards: [...deck.cards, action.payload.card],
+          };
+        }),
       };
     },
   },
