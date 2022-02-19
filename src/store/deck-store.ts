@@ -160,6 +160,19 @@ const deckSlice = createSlice({
         ),
       };
     },
+    updateDeckKeyCard: (
+      state,
+      action: PayloadAction<Required<Pick<Deck, 'id' | 'keyCard'>>>
+    ) => {
+      return {
+        ...state,
+        decks: state.decks.map((deck) =>
+          deck.id === action.payload.id
+            ? { ...deck, keyCard: action.payload.keyCard }
+            : deck
+        ),
+      };
+    },
   },
 });
 

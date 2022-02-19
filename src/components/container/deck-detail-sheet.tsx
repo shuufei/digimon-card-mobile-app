@@ -23,6 +23,7 @@ import * as deckStore from '../../store/deck-store';
 import { EditDeckTitleForm } from '../presentation/edit-deck-title-form';
 import { MenuItem } from '../presentation/menu-item';
 import { DeckCardList } from './deck-card-list';
+import { SelectKeyCardForDeck } from '../presentation/select-key-card-for-deck';
 
 type ViewMode = 'list' | 'edit-title' | 'select-keycard' | 'share' | 'delete';
 
@@ -107,7 +108,12 @@ export const DeckDetailSheet = React.memo(() => {
               <MenuItem label="複製" />
               <MenuItem label="共有" />
               <MenuItem label="対戦" />
-              <MenuItem label="キーカードを選択" />
+              <MenuItem
+                label="キーカードを選択"
+                onPress={() => {
+                  setViewMode('select-keycard');
+                }}
+              />
               <MenuItem
                 label="削除"
                 color="red.500"
@@ -171,6 +177,23 @@ export const DeckDetailSheet = React.memo(() => {
                 })
               );
             }
+          }}
+        />
+      )}
+      {viewMode === 'select-keycard' && selectedDeck != null && (
+        <SelectKeyCardForDeck
+          deck={selectedDeck}
+          onCancel={() => {
+            setViewMode('list');
+          }}
+          onSelect={(card) => {
+            dispatch(
+              deckStore.actions.updateDeckKeyCard({
+                id: selectedDeck.id,
+                keyCard: card,
+              })
+            );
+            setViewMode('list');
           }}
         />
       )}

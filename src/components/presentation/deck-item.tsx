@@ -26,7 +26,7 @@ const getKeyCard = (deck: Deck) => {
 };
 
 export const DeckItem: FC<{ deck: Deck }> = ({ deck }) => {
-  const keyCard = getKeyCard(deck);
+  const keyCard = deck.keyCard ?? getKeyCard(deck);
   const width = 85;
   const height = width * cardImageAspectRate;
   return (

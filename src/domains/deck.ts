@@ -5,6 +5,7 @@ export type Deck = {
   title: string;
   cards: CardsGroupedByLvAndCardTypeAndNo;
   createdAt: number;
+  keyCard?: CardInfo;
 };
 
 export const createDeck = (deck: Partial<Deck>): Deck => {
