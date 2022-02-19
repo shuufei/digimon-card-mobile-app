@@ -1,7 +1,8 @@
-import { Button, Pressable, Text, View, VStack } from 'native-base';
+import { HStack, Pressable, View } from 'native-base';
 import React, { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, selectors } from '../../store/deck-store';
+import { DeckItem } from '../presentation/deck-item';
 
 export const DeckList: FC = React.memo(() => {
   const dispatch = useDispatch();
@@ -17,41 +18,25 @@ export const DeckList: FC = React.memo(() => {
   });
 
   return (
-    <View>
-      <Text>deck list: {sortedDecks.length}</Text>
-      <View p={3}>
-        <Button
-          onPress={() => {
-            dispatch(actions.reset());
-          }}
-        >
-          reset
-        </Button>
-      </View>
-      <VStack p={4} space={3}>
+    <View justifyContent="center">
+      <HStack p={4} space={3} flexWrap="wrap">
         {sortedDecks.map((deck) => {
           return (
             <Pressable
               key={deck.id}
-              px={4}
-              py={3}
-              borderColor="gray.300"
-              borderStyle="solid"
-              borderWidth={1}
+              borderRadius="sm"
               _pressed={{
-                background: 'gray.300',
+                background: 'gray.200',
               }}
               onPress={() => {
                 dispatch(actions.selectDeck({ deckId: deck.id }));
               }}
             >
-              <Text>
-                {deck.id}: {deck.title}
-              </Text>
+              <DeckItem deck={deck} />
             </Pressable>
           );
         })}
-      </VStack>
+      </HStack>
     </View>
   );
 });

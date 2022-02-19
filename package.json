@@ -19,6 +19,7 @@
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
     "@reduxjs/toolkit": "^1.7.2",
+    "dayjs": "^1.10.7",
     "expo": "~44.0.0",
     "expo-dev-client": "~0.8.4",
     "expo-haptics": "~11.1.0",
