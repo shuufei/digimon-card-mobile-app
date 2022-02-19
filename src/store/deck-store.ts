@@ -147,6 +147,19 @@ const deckSlice = createSlice({
         decks: state.decks.filter((deck) => deck.id !== action.payload.deckId),
       };
     },
+    updateDeckTitle: (
+      state,
+      action: PayloadAction<Pick<Deck, 'id' | 'title'>>
+    ) => {
+      return {
+        ...state,
+        decks: state.decks.map((deck) =>
+          deck.id === action.payload.id
+            ? { ...deck, title: action.payload.title }
+            : deck
+        ),
+      };
+    },
   },
 });
 

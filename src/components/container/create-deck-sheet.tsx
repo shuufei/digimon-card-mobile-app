@@ -23,7 +23,7 @@ export const CreateDeckSheet: FC = React.memo(() => {
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardWillShow', () => {
-      bottomSheetRef.current?.snapToIndex(1);
+      isCreateMode && bottomSheetRef.current?.snapToIndex(1);
     });
     const hideSubscription = Keyboard.addListener('keyboardWillHide', () => {
       isCreateMode && bottomSheetRef.current?.snapToIndex(0);
