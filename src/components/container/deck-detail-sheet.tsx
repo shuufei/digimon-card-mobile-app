@@ -62,36 +62,77 @@ export const DeckDetailSheet = React.memo(() => {
     >
       {viewMode === 'list' && (
         <>
-          <View flexDirection="row" px={2} justifyContent="space-between">
-            <Button
-              variant="ghost"
-              colorScheme="blue"
-              onPress={() => {
-                setViewMode('list');
-                dispatch(deckStore.actions.selectDeck({ deckId: undefined }));
-              }}
-            >
-              閉じる
-            </Button>
+          <HStack
+            flexDirection="row"
+            px={2}
+            justifyContent="space-between"
+            alignItems="center"
+            space={2}
+          >
+            <View flex={1} flexDirection="row" justifyContent="flex-start">
+              <Button
+                variant="ghost"
+                colorScheme="blue"
+                display="flex"
+                justifyContent="flex-start"
+                onPress={() => {
+                  setViewMode('list');
+                  dispatch(deckStore.actions.selectDeck({ deckId: undefined }));
+                }}
+              >
+                閉じる
+              </Button>
+            </View>
+            <View flex={3} flexDirection="column">
+              <Heading
+                fontSize={16}
+                fontWeight="semibold"
+                textAlign="center"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {selectedDeck?.title}
+              </Heading>
+              <View flexDirection="row" justifyContent="center">
+                <View
+                  backgroundColor="gray.900"
+                  borderRadius="sm"
+                  p={1}
+                  mt={1}
+                  width={12}
+                >
+                  <Text fontSize={9} color="white" textAlign="center">
+                    {totalCount} / 55
+                  </Text>
+                </View>
+              </View>
+            </View>
             <Menu
               trigger={(triggerProps) => {
                 return (
-                  <Button
-                    size="xs"
-                    variant="ghost"
-                    _pressed={{
-                      background: '#f0f0f0',
-                    }}
-                    onPress={() => {}}
-                    colorScheme="blue"
-                    {...triggerProps}
+                  <View
+                    flex={1}
+                    display="flex"
+                    flexDirection="row"
+                    justifyContent="flex-end"
                   >
-                    <Ionicons
-                      name="ellipsis-horizontal-circle-outline"
-                      size={24}
-                      color={primaryColorCode}
-                    />
-                  </Button>
+                    <Button
+                      size="xs"
+                      variant="ghost"
+                      _pressed={{
+                        background: '#f0f0f0',
+                      }}
+                      // width={12}
+                      colorScheme="blue"
+                      {...triggerProps}
+                    >
+                      <Ionicons
+                        name="ellipsis-horizontal-circle-outline"
+                        size={24}
+                        color={primaryColorCode}
+                      />
+                    </Button>
+                  </View>
                 );
               }}
               width="160"
@@ -128,35 +169,26 @@ export const DeckDetailSheet = React.memo(() => {
                 }}
               />
             </Menu>
-          </View>
+          </HStack>
           <ScrollView marginTop={2}>
             <View px={4} paddingBottom={20}>
-              <HStack justifyContent="space-between">
-                <Heading fontSize={18} fontWeight="semibold">
-                  {selectedDeck?.title}
-                </Heading>
-                <Text>{totalCount} / 55</Text>
-              </HStack>
-              <View marginTop={3}>
-                {Object.entries(selectedDeck?.cards ?? {}).map(
-                  ([key, value]) => {
-                    const displayCardType =
-                      convertToDisplayCardTypeFromCardType(key as CardType);
-                    const displayLv = convertToDisplayDigimonLvFromDigimonLv(
-                      key as Lv
-                    );
-                    const title =
-                      displayCardType !== '-' ? displayCardType : displayLv;
-                    return (
-                      <DeckCardList
-                        key={key}
-                        title={title}
-                        cardsGroupedByNo={value}
-                      />
-                    );
-                  }
-                )}
-              </View>
+              {Object.entries(selectedDeck?.cards ?? {}).map(([key, value]) => {
+                const displayCardType = convertToDisplayCardTypeFromCardType(
+                  key as CardType
+                );
+                const displayLv = convertToDisplayDigimonLvFromDigimonLv(
+                  key as Lv
+                );
+                const title =
+                  displayCardType !== '-' ? displayCardType : displayLv;
+                return (
+                  <DeckCardList
+                    key={key}
+                    title={title}
+                    cardsGroupedByNo={value}
+                  />
+                );
+              })}
             </View>
           </ScrollView>
         </>
