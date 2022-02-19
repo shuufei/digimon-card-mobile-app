@@ -6,10 +6,19 @@ import { actions, selectors } from '../../store/deck-store';
 export const DeckList: FC = React.memo(() => {
   const dispatch = useDispatch();
   const decks = useSelector(selectors.decksSelector);
+  const sortedDecks = [...decks].sort((v1, v2) => {
+    if (v1.createdAt > v2.createdAt) {
+      return 1;
+    }
+    if (v1.createdAt < v2.createdAt) {
+      return -1;
+    }
+    return 0;
+  });
 
   return (
     <View>
-      <Text>deck list: {decks.length}</Text>
+      <Text>deck list: {sortedDecks.length}</Text>
       <View p={3}>
         <Button
           onPress={() => {
@@ -20,7 +29,7 @@ export const DeckList: FC = React.memo(() => {
         </Button>
       </View>
       <VStack p={4} space={3}>
-        {decks.map((deck) => {
+        {sortedDecks.map((deck) => {
           return (
             <Pressable
               key={deck.id}

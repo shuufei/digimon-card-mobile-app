@@ -4,6 +4,7 @@ export type Deck = {
   id: string;
   title: string;
   cards: CardsGroupedByLvAndCardTypeAndNo;
+  createdAt: number;
 };
 
 export const createDeck = (deck: Partial<Deck>): Deck => {
@@ -21,6 +22,7 @@ export const createDeck = (deck: Partial<Deck>): Deck => {
       '3_テイマー': {},
       '4_オプション': {},
     },
+    createdAt: new Date().valueOf(),
     ...deck,
   };
 };
