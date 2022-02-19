@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import BottomSheet from '@gorhom/bottom-sheet';
+import { omit } from 'lodash';
 import {
   Button,
   Heading,
@@ -14,19 +15,19 @@ import { StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { primaryColorCode } from '../../configs/styles';
 import {
+  cardImageAspectRate,
   CardType,
   convertToDisplayCardTypeFromCardType,
   convertToDisplayDigimonLvFromDigimonLv,
   Lv,
 } from '../../domains/card';
+import { createDeck, getKeyCard } from '../../domains/deck';
 import * as deckStore from '../../store/deck-store';
+import { Card } from '../presentation/card';
 import { EditDeckTitleForm } from '../presentation/edit-deck-title-form';
 import { MenuItem } from '../presentation/menu-item';
-import { DeckCardList } from './deck-card-list';
 import { SelectKeyCardForDeck } from '../presentation/select-key-card-for-deck';
-import { Card } from '../presentation/card';
-import { cardImageAspectRate } from '../../domains/card';
-import { getKeyCard } from '../../domains/deck';
+import { DeckCardList } from './deck-card-list';
 
 type ViewMode = 'list' | 'edit-title' | 'select-keycard' | 'share' | 'delete';
 
@@ -151,7 +152,20 @@ export const DeckDetailSheet = React.memo(() => {
                   setViewMode('edit-title');
                 }}
               />
-              <MenuItem label="複製" />
+              <MenuItem
+                label="複製"
+                onPress={() => {
+                  if (selectedDeck == null) {
+                    return;
+                  }
+                  const duplicatedDeck = createDeck({
+                    ...omit(selectedDeck, ['id', 'createdAt']),
+                    title: `${selectedDeck.title} コピー`,
+                  });
+                  dispatch(deckStore.actions.addDeck({ deck: duplicatedDeck }));
+                  bottomSheetRef.current?.snapToIndex(0);
+                }}
+              />
               <MenuItem label="共有" />
               <MenuItem label="対戦" />
               <MenuItem
