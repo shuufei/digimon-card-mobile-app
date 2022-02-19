@@ -1,4 +1,5 @@
 import { CardsGroupedByLvAndCardTypeAndNo, CardInfo } from './card';
+import { first } from 'lodash';
 
 export type Deck = {
   id: string;
@@ -26,4 +27,23 @@ export const createDeck = (deck: Partial<Deck>): Deck => {
     createdAt: new Date().valueOf(),
     ...deck,
   };
+};
+
+export const getKeyCard = (deck: Deck) => {
+  if (Object.keys(deck.cards['Lv.7']).length >= 1) {
+    return first(Object.values(deck.cards['Lv.7']))?.card;
+  }
+  if (Object.keys(deck.cards['Lv.6']).length >= 1) {
+    return first(Object.values(deck.cards['Lv.6']))?.card;
+  }
+  if (Object.keys(deck.cards['Lv.5']).length >= 1) {
+    return first(Object.values(deck.cards['Lv.5']))?.card;
+  }
+  if (Object.keys(deck.cards['Lv.4']).length >= 1) {
+    return first(Object.values(deck.cards['Lv.4']))?.card;
+  }
+  if (Object.keys(deck.cards['Lv.3']).length >= 1) {
+    return first(Object.values(deck.cards['Lv.3']))?.card;
+  }
+  return;
 };

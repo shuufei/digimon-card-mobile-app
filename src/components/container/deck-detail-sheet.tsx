@@ -24,6 +24,9 @@ import { EditDeckTitleForm } from '../presentation/edit-deck-title-form';
 import { MenuItem } from '../presentation/menu-item';
 import { DeckCardList } from './deck-card-list';
 import { SelectKeyCardForDeck } from '../presentation/select-key-card-for-deck';
+import { Card } from '../presentation/card';
+import { cardImageAspectRate } from '../../domains/card';
+import { getKeyCard } from '../../domains/deck';
 
 type ViewMode = 'list' | 'edit-title' | 'select-keycard' | 'share' | 'delete';
 
@@ -52,6 +55,9 @@ export const DeckDetailSheet = React.memo(() => {
     },
     0
   );
+
+  const keyCard =
+    selectedDeck?.keyCard ?? (selectedDeck && getKeyCard(selectedDeck));
 
   return (
     <BottomSheet
@@ -122,7 +128,6 @@ export const DeckDetailSheet = React.memo(() => {
                       _pressed={{
                         background: '#f0f0f0',
                       }}
-                      // width={12}
                       colorScheme="blue"
                       {...triggerProps}
                     >
@@ -150,12 +155,6 @@ export const DeckDetailSheet = React.memo(() => {
               <MenuItem label="共有" />
               <MenuItem label="対戦" />
               <MenuItem
-                label="キーカードを選択"
-                onPress={() => {
-                  setViewMode('select-keycard');
-                }}
-              />
-              <MenuItem
                 label="削除"
                 color="red.500"
                 onPress={() => {
@@ -171,7 +170,31 @@ export const DeckDetailSheet = React.memo(() => {
             </Menu>
           </HStack>
           <ScrollView marginTop={2}>
-            <View px={4} paddingBottom={20}>
+            {keyCard && (
+              <View mt={2} p={2} justifyContent="center" alignItems="center">
+                <Card
+                  card={keyCard}
+                  width={90}
+                  height={90 * cardImageAspectRate}
+                />
+                <Text fontSize={12} fontWeight="medium" mt={2}>
+                  キーカード
+                </Text>
+                <Button
+                  colorScheme="gray"
+                  variant="outline"
+                  mt="2"
+                  size="xs"
+                  px={6}
+                  onPress={() => {
+                    setViewMode('select-keycard');
+                  }}
+                >
+                  変更
+                </Button>
+              </View>
+            )}
+            <View mt={3} px={4} paddingBottom={20}>
               {Object.entries(selectedDeck?.cards ?? {}).map(([key, value]) => {
                 const displayCardType = convertToDisplayCardTypeFromCardType(
                   key as CardType
