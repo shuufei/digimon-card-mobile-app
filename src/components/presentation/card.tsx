@@ -1,5 +1,5 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { Image, Pressable } from 'native-base';
+import { Image, Pressable, View } from 'native-base';
 import React, { FC } from 'react';
 import { CardInfo } from '../../domains/card';
 import { RootParamList } from '../../navigation';
@@ -10,12 +10,28 @@ export type CardProps = {
   height: number;
   width: number;
   padding?: number;
+  isPressable?: boolean;
 };
 
+const CardImage: FC<CardProps> = ({ card, height, width, padding }) => {
+  return (
+    <Image
+      source={{
+        uri: getCardImageSrc(card),
+        cache: 'force-cache',
+      }}
+      resizeMode="contain"
+      height={height}
+      width={width}
+      alt={`${card.name}`}
+      m={padding}
+    />
+  );
+};
 export const Card: FC<CardProps> = React.memo(
-  ({ card, height, width, padding }) => {
+  ({ card, height, width, padding, isPressable = true }) => {
     const { navigate } = useNavigation<NavigationProp<RootParamList>>();
-    return (
+    return isPressable ? (
       <Pressable
         onPress={() => {
           navigate('CardModal', {
@@ -24,18 +40,22 @@ export const Card: FC<CardProps> = React.memo(
           });
         }}
       >
-        <Image
-          source={{
-            uri: getCardImageSrc(card),
-            cache: 'force-cache',
-          }}
-          resizeMode="contain"
+        <CardImage
+          card={card}
           height={height}
           width={width}
-          alt={`${card.name}`}
-          m={padding}
+          padding={padding}
         />
       </Pressable>
+    ) : (
+      <View>
+        <CardImage
+          card={card}
+          height={height}
+          width={width}
+          padding={padding}
+        />
+      </View>
     );
   }
 );

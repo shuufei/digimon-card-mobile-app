@@ -30,9 +30,14 @@ export const DeckItem: FC<{ deck: Deck }> = ({ deck }) => {
   const width = 85;
   const height = width * cardImageAspectRate;
   return (
-    <View px={2} pt={2} pb={8} alignItems="center">
+    <View px={2} pt={2} pb={6} alignItems="center">
       {keyCard ? (
-        <Card width={width} height={height} card={keyCard} />
+        <Card
+          width={width}
+          height={height}
+          card={keyCard}
+          isPressable={false}
+        />
       ) : (
         <View
           width={width}
