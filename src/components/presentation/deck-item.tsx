@@ -52,7 +52,14 @@ export const DeckItem: FC<{ deck: Deck }> = ({ deck }) => {
           </Text>
         </View>
       )}
-      <Text fontSize={12} fontWeight="semibold" marginTop="2" maxWidth={20}>
+      <Text
+        fontSize={12}
+        fontWeight="semibold"
+        marginTop="2"
+        maxWidth={20}
+        numberOfLines={2}
+        ellipsizeMode="tail"
+      >
         {deck.title}
       </Text>
       <Text fontSize={12} fontWeight="medium" color="gray.400">
