@@ -6,6 +6,7 @@ import BT05 from '../../assets/cardInfo/BT05.json';
 import BT06 from '../../assets/cardInfo/BT06.json';
 import BT07 from '../../assets/cardInfo/BT07.json';
 import BT08 from '../../assets/cardInfo/BT08.json';
+import BT09 from '../../assets/cardInfo/BT09.json';
 import EX01 from '../../assets/cardInfo/EX01.json';
 import EX02 from '../../assets/cardInfo/EX02.json';
 import PRO from '../../assets/cardInfo/PRO.json';
@@ -84,6 +85,7 @@ export const ALL_CARD_LIST: CardInfo[] = [
   ...BT06.cardInfoList.map((v) => ({ ...v, category: 'BT06' })),
   ...BT07.cardInfoList.map((v) => ({ ...v, category: 'BT07' })),
   ...BT08.cardInfoList.map((v) => ({ ...v, category: 'BT08' })),
+  ...BT09.cardInfoList.map((v) => ({ ...v, category: 'BT09' })),
   ...EX01.cardInfoList.map((v) => ({ ...v, category: 'EX01' })),
   ...EX02.cardInfoList.map((v) => ({ ...v, category: 'EX02' })),
   ...PRO.cardInfoList.map((v) => ({ ...v, category: 'PRO' })),

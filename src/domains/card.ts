@@ -141,6 +141,7 @@ export const CATEGORY = {
   BT06: 'BT06',
   BT07: 'BT07',
   BT08: 'BT08',
+  BT09: 'BT09',
   EX01: 'EX01',
   EX02: 'EX02',
   ST01: 'ST01',
@@ -179,6 +180,8 @@ export const convertToDisplayCategoryFromCategory = (
       return 'BT-07 ネクストアドベンチャー';
     case 'BT08':
       return 'BT-08 ニューヒーロー';
+    case 'BT09':
+      return 'BT-09 Xレコード';
     case 'EX01':
       return 'EX-01 クラシックコレクション';
     case 'EX02':
