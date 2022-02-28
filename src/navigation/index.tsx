@@ -6,6 +6,7 @@ import { CardModalScreen } from '../screen/card-modal-screen';
 import { CardListFilterModalScreen } from '../screen/card-list-filter-modal-screen';
 import { DeckScreen } from '../screen/deck-screen';
 import { VSScreen } from '../screen/vs-screen';
+import { SignInScreen } from '../screen/sign-in-screen';
 
 export type RootParamList = {
   Main: undefined;
@@ -24,6 +25,7 @@ export const DrawerNavigator: FC = () => {
         component={VSScreen}
         options={{ title: '対戦' }}
       />
+      <Drawer.Screen name="SignIn" component={SignInScreen} />
     </Drawer.Navigator>
   );
 };
