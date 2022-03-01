@@ -1,6 +1,6 @@
 import { View, Text, Input, Button } from 'native-base';
 import { Controller, useForm } from 'react-hook-form';
-import { Auth } from 'aws-amplify';
+import { Auth, API } from 'aws-amplify';
 import { useEffect, useState } from 'react';
 
 export const SignInScreen = () => {
@@ -102,6 +102,19 @@ export const SignInScreen = () => {
           }}
         >
           Confirm Current User
+        </Button>
+        <Button
+          mt="3"
+          onPress={async () => {
+            try {
+              const res = await API.get('v1', '/v1/credentials', {});
+              console.log('--- qs: ', res);
+            } catch (error) {
+              console.log('--- error: ', error);
+            }
+          }}
+        >
+          Get QueryStrings
         </Button>
       </View>
     </View>
