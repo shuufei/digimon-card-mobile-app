@@ -1,32 +1,19 @@
-import { View, Text, Input, Button } from 'native-base';
+import { Auth } from 'aws-amplify';
+import { Button, Input, View } from 'native-base';
 import { Controller, useForm } from 'react-hook-form';
-import { Auth, API } from 'aws-amplify';
-import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import * as authStore from '../store/auth-store';
 
 export const SignInScreen = () => {
-  const [isSignedIn, setSignedIn] = useState(false);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    const checkSignedIn = async () => {
-      try {
-        await Auth.currentAuthenticatedUser();
-        setSignedIn(true);
-      } catch (error) {
-        setSignedIn(false);
-      }
-    };
-    checkSignedIn();
-  }, []);
-
-  const { control, getValues, setValue } = useForm<{
+  const { control, getValues } = useForm<{
     username: string;
     password: string;
   }>();
 
   return (
     <View>
-      <Text>Sign In</Text>
-      <Text>{isSignedIn ? 'サインイン済み' : '未サインイン'}</Text>
       <View p="3">
         <Controller
           control={control}
@@ -78,17 +65,18 @@ export const SignInScreen = () => {
             const username = getValues('username');
             const password = getValues('password');
             const res = await Auth.signIn(username, password);
-            setSignedIn(true);
+            dispatch(authStore.actions.signIn());
             console.log('--- sign in res: ', res);
           }}
         >
           SignIn
         </Button>
-        <Button
+        {/* <Button
           mt="2"
           onPress={async () => {
             Auth.signOut();
-            setSignedIn(false);
+            // setSignedIn(false);
+            dispatch(authStore.actions.signOut());
             console.log('--- sign out');
           }}
         >
@@ -115,7 +103,7 @@ export const SignInScreen = () => {
           }}
         >
           Get QueryStrings
-        </Button>
+        </Button> */}
       </View>
     </View>
   );
