@@ -1,10 +1,13 @@
 import { Auth } from 'aws-amplify';
-import { Button, Input, View } from 'native-base';
+import { Button, Input, Spinner, Text, View } from 'native-base';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import * as authStore from '../store/auth-store';
 
 export const SignInScreen = () => {
+  const [isLoading, setLoading] = useState<boolean>(false);
+
   const dispatch = useDispatch();
 
   const { control, getValues } = useForm<{
@@ -61,15 +64,26 @@ export const SignInScreen = () => {
       </View>
       <View px="3" mt="4">
         <Button
+          disabled={isLoading}
           onPress={async () => {
             const username = getValues('username');
             const password = getValues('password');
+            setLoading(true);
             const res = await Auth.signIn(username, password);
+            setLoading(false);
             dispatch(authStore.actions.signIn());
             console.log('--- sign in res: ', res);
           }}
         >
-          SignIn
+          {isLoading ? (
+            <Spinner
+              accessibilityLabel="Loading posts"
+              color="white"
+              opacity="1"
+            />
+          ) : (
+            <Text color="white">SignIn</Text>
+          )}
         </Button>
         {/* <Button
           mt="2"
