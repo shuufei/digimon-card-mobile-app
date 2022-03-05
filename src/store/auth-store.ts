@@ -1,6 +1,7 @@
-import { createSlice, createSelector } from '@reduxjs/toolkit';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 export type State = {
   isAuthenticated?: boolean;
+  signedQueryStrings?: string;
 };
 
 const initialState: State = {};
@@ -21,6 +22,15 @@ const authSlice = createSlice({
         isAuthenticated: false,
       };
     },
+    setSignedQueryString: (
+      state,
+      action: PayloadAction<Pick<State, 'signedQueryStrings'>>
+    ) => {
+      return {
+        ...state,
+        signedQueryStrings: action.payload.signedQueryStrings,
+      };
+    },
   },
 });
 
@@ -35,7 +45,12 @@ const isAuthenticatedSelector = createSelector(
   selectSelf,
   (state) => state.isAuthenticated
 );
+const signedQueryStringsSelector = createSelector(
+  selectSelf,
+  (state) => state.signedQueryStrings
+);
 export const selectors = {
   selectSelf,
   isAuthenticatedSelector,
+  signedQueryStringsSelector,
 };

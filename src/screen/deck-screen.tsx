@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SegmentControl from '@react-native-segmented-control/segmented-control';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { API } from 'aws-amplify';
 import { Button, Menu, Text, View } from 'native-base';
 import { FC, useEffect, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
@@ -16,6 +17,7 @@ import { storageKeys } from '../configs/storage';
 import { Category } from '../domains/card';
 import { Deck } from '../domains/deck';
 import { RootParamList } from '../navigation';
+import * as authStore from '../store/auth-store';
 import {
   actions as cardListFilterStoreActions,
   selectors as cardListFilterStoreSelectors,
@@ -209,12 +211,30 @@ export const DeckScreen = () => {
   const filteredCardList = useExecuteCardListFilter();
   const currentTab = useSelector(deckStore.selectors.currentTabSelector);
   const decks = useSelector(deckStore.selectors.decksSelector);
+
   useEffect(() => {
     const saveDecks = async () => {
       await AsyncStorage.setItem(storageKeys.decks, JSON.stringify(decks));
     };
     saveDecks();
   }, [decks]);
+
+  useEffect(() => {
+    const setSignedQueryStrings = async () => {
+      const res: { credentials: string } = await API.get(
+        'v1',
+        '/v1/credentials',
+        {}
+      );
+      console.log('--- signed query strings: ', res.credentials);
+      dispatch(
+        authStore.actions.setSignedQueryString({
+          signedQueryStrings: res.credentials,
+        })
+      );
+    };
+    setSignedQueryStrings();
+  }, [dispatch]);
 
   useEffect(() => {
     setOptions({
