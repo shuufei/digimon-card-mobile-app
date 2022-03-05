@@ -7,6 +7,9 @@ import * as authStore from '../store/auth-store';
 
 export const SignInScreen = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  );
 
   const dispatch = useDispatch();
 
@@ -66,13 +69,18 @@ export const SignInScreen = () => {
         <Button
           disabled={isLoading}
           onPress={async () => {
-            const username = getValues('username');
-            const password = getValues('password');
-            setLoading(true);
-            const res = await Auth.signIn(username, password);
-            setLoading(false);
-            dispatch(authStore.actions.signIn());
-            console.log('--- sign in res: ', res);
+            try {
+              const username = getValues('username');
+              const password = getValues('password');
+              setLoading(true);
+              const res = await Auth.signIn(username, password);
+              dispatch(authStore.actions.signIn());
+              console.log('--- sign in res: ', res);
+            } catch (error) {
+              setErrorMessage(error.message);
+            } finally {
+              setLoading(false);
+            }
           }}
         >
           {isLoading ? (
@@ -85,6 +93,12 @@ export const SignInScreen = () => {
             <Text color="white">SignIn</Text>
           )}
         </Button>
+        {errorMessage && (
+          <Text mt="2" color="red.500">
+            {errorMessage}
+          </Text>
+        )}
+
         {/* <Button
           mt="2"
           onPress={async () => {
