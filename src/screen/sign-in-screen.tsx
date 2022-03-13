@@ -29,6 +29,7 @@ export const SignInScreen = () => {
             return (
               <>
                 <Input
+                  type="text"
                   w="100%"
                   placeholder="ユーザ名"
                   fontSize={16}
@@ -50,6 +51,7 @@ export const SignInScreen = () => {
             return (
               <>
                 <Input
+                  type="password"
                   w="100%"
                   placeholder="パスワード"
                   fontSize={16}
