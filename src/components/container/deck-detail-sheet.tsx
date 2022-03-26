@@ -1,5 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import BottomSheet from '@gorhom/bottom-sheet';
+import { Auth } from 'aws-amplify';
+import { S3 } from 'aws-sdk';
 import { omit } from 'lodash';
 import {
   Button,
@@ -10,9 +12,16 @@ import {
   Text,
   View,
 } from 'native-base';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { BUCKET, REGION } from '../../configs/s3';
 import { primaryColorCode } from '../../configs/styles';
 import {
   cardImageAspectRate,
@@ -22,6 +31,7 @@ import {
   Lv,
 } from '../../domains/card';
 import { createDeck, getKeyCard } from '../../domains/deck';
+import { convertToDeckForVsAppFromDeck } from '../../domains/deck-for-vs-app';
 import * as deckStore from '../../store/deck-store';
 import { Card } from '../presentation/card';
 import { EditDeckTitleForm } from '../presentation/edit-deck-title-form';
@@ -59,6 +69,30 @@ export const DeckDetailSheet = React.memo(() => {
 
   const keyCard =
     selectedDeck?.keyCard ?? (selectedDeck && getKeyCard(selectedDeck));
+
+  const uploadDeckToS3 = useCallback(async () => {
+    console.log('touched upload deck to s3: ', selectedDeck == null);
+    if (selectedDeck == null) {
+      return;
+    }
+    const creds = await Auth.currentCredentials();
+    const user = await Auth.currentAuthenticatedUser();
+    try {
+      const s3 = new S3({ region: REGION, credentials: creds });
+      const deckForVsApp = convertToDeckForVsAppFromDeck(selectedDeck);
+      const res = await s3
+        .putObject({
+          Bucket: BUCKET,
+          Key: `decks/${user.username}/${selectedDeck.title}_${selectedDeck.id}.json`,
+          Body: JSON.stringify(deckForVsApp),
+          ContentType: 'application/json',
+        })
+        .promise();
+      console.log('upload deck success: ', res);
+    } catch (error) {
+      console.error('list objects failed: ', error);
+    }
+  }, []);
 
   return (
     <BottomSheet
@@ -168,6 +202,7 @@ export const DeckDetailSheet = React.memo(() => {
               />
               <MenuItem label="共有" />
               <MenuItem label="対戦" />
+              <MenuItem label="S3にアップロード" onPress={uploadDeckToS3} />
               <MenuItem
                 label="削除"
                 color="red.500"
