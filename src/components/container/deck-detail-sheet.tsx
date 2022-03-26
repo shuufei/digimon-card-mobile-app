@@ -10,6 +10,7 @@ import {
   Menu,
   ScrollView,
   Text,
+  useToast,
   View,
 } from 'native-base';
 import React, {
@@ -51,6 +52,8 @@ export const DeckDetailSheet = React.memo(() => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['20%', '60%', '95%'], []);
 
+  const toast = useToast();
+
   useEffect(() => {
     selectedDeckId
       ? bottomSheetRef.current?.expand()
@@ -89,10 +92,24 @@ export const DeckDetailSheet = React.memo(() => {
         })
         .promise();
       console.log('upload deck success: ', res);
+      toast.show({
+        title: 'デッキデータをS3にアップロードしました',
+        duration: 3000,
+        isClosable: true,
+        placement: 'top',
+        status: 'success',
+      });
     } catch (error) {
       console.error('list objects failed: ', error);
+      toast.show({
+        title: 'デッキデータをS3にアップロードできませんでした',
+        duration: 3000,
+        isClosable: true,
+        placement: 'top',
+        status: 'error',
+      });
     }
-  }, []);
+  }, [selectedDeck, toast]);
 
   return (
     <BottomSheet
