@@ -159,6 +159,7 @@ const CardListFilterButton: FC<{ onPress: () => void }> = ({ onPress }) => {
 
 const DeckMenuButton: FC<{ onPress: () => void }> = ({ onPress }) => {
   const dispatch = useDispatch();
+  console.log('PR sample: update 01');
   return (
     <Menu
       trigger={(triggerProps) => {
