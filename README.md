@@ -1,4 +1,4 @@
-# Digimon Card Mobile App
+# Spotted Seal Mobile
 
 ## Prerequisite
 
@@ -18,7 +18,7 @@ $ yarn start
 
 ### 1. カード情報と画像データをセット
 
-1. digimon-card-data-fetch でカード情報と画像データを取得
+1. data-fetch でカード情報と画像データを取得
 1. カード情報を assets/cardInfo 配下に配置
 1. 画像データを S3 の対象バケットに配置
 
